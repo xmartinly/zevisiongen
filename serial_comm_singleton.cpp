@@ -1,0 +1,125 @@
+﻿#include "serial_comm_singleton.h"
+
+SerialCommSingleton::SerialCommSingleton() {
+    Comm_serialPort = new QSerialPort;
+}
+
+SerialCommSingleton* SerialCommSingleton::GetInstance() {
+    return m_instance;
+}
+
+/*!
+   SerialCommSingleton private construct.
+*/
+
+SerialCommSingleton* SerialCommSingleton::m_instance = new SerialCommSingleton();
+
+/*!
+   Connect the instrument with given com port and baudrate. Return TRUE if connect success, FALSE if connect failed.
+*/
+bool SerialCommSingleton::connInst(const QString& com_port, const QString& baud_rate) {
+    if(Comm_serialPort->isOpen()) {
+        return false;
+    }
+    if(com_port == "" || baud_rate == NULL) {
+        return false;
+    }
+    uint ui_baudrate = baud_rate.toUInt();
+    Comm_serialPort->setPortName(com_port);
+    Comm_serialPort->setBaudRate(ui_baudrate);
+    Comm_serialPort->setParity(QSerialPort::NoParity);
+    Comm_serialPort->setDataBits(QSerialPort::Data8);
+    Comm_serialPort->setFlowControl(QSerialPort::NoFlowControl);
+    Comm_serialPort->setStopBits(QSerialPort::OneStop);
+    B_isConnected = Comm_serialPort->open(QIODevice::ReadWrite);
+    if(B_isConnected) {
+        connect(Comm_serialPort, SIGNAL(readyRead()), this, SLOT(portRecvDataDelay()));
+        QT_recvDelayTimer = new QTimer(this);
+        connect(QT_recvDelayTimer, SIGNAL(timeout()), this, SLOT(recvCommData()));
+        QT_cmdQueueTimer = new QTimer(this);
+        connect(QT_cmdQueueTimer, SIGNAL(timeout()), this, SLOT(sendCmd()));
+        QT_cmdQueueTimer->start(90);
+    }
+    return B_isConnected;
+}
+
+
+/*!
+   Write command to the opened port. CUSTOM private SLOT.
+   Command is dequequed from the QQ_cmd.
+   If serial port is not open, function will stop.
+   If QQ_cmd queque is empty, funciton will stop.
+*/
+void SerialCommSingleton::sendCmd() {
+    if(!Comm_serialPort->isOpen()) {
+        return;
+    }
+    if(!B_isReadFinished || QQ_cmd.count() < 1) {
+        return;
+    } else {
+        QMap<QString, QByteArray> qm_cmd = QQ_cmd.dequeue();
+        S_cmdString = qm_cmd["cmd_str"];
+        B_isReadFinished = false;
+        Comm_serialPort->write(qm_cmd["cmd_treated"]);
+    }
+}
+
+/*!
+   Read port data delay for 10ms to avoid incomplete data.
+*/
+void SerialCommSingleton::portRecvDataDelay() {
+    QT_recvDelayTimer->stop();
+    QT_recvDelayTimer->start(10);
+}
+
+/*!
+   Public function will write response to the given var.
+*/
+void SerialCommSingleton::getResponse(QString& response) {
+    if(S_response.length() > 0) {
+        response = S_cmdString
+                   + ":"
+                   + S_response;
+    }
+    S_response = "";
+    S_cmdString = "";
+}
+
+/*!
+   Read serial port data.
+   If serial port not open, function stops.
+   Otherwise function will emit the sendResponse signal.
+*/
+void SerialCommSingleton::recvCommData() {
+    QT_recvDelayTimer->stop();
+    if(!Comm_serialPort->isOpen()) {
+        return;
+    }
+    QByteArray ba_response = Comm_serialPort->readLine();
+    S_response = QString::number(QDateTime::currentMSecsSinceEpoch())
+                 + ":" + ba_response;
+    B_isReadFinished = true;
+    QMap<QString, QVariant> qm_resp;
+    qm_resp.insert("cmd", S_cmdString);
+    qm_resp.insert("data", ba_response);
+    emit sendResponse(qm_resp);
+}
+
+/*!
+   Disconnect the serial port connection.
+*/
+bool SerialCommSingleton::disconnInst() {
+    if(!Comm_serialPort->isOpen()) {
+        return true;
+    }
+    Comm_serialPort->close();
+    return !Comm_serialPort->isOpen();
+}
+
+/*!
+   Add command data to the queue.
+   For example: {"cmd_str", !#@O7}
+*/
+void SerialCommSingleton::cmdEnQueue(const QMap<QString, QByteArray> qm_cmd) {
+    QQ_cmd.enqueue(qm_cmd);
+}
