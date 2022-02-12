@@ -4,19 +4,26 @@ SerialCommSingleton::SerialCommSingleton() {
     Comm_serialPort = new QSerialPort;
 }
 
+///
+/// \brief SerialCommSingleton::GetInstance
+/// \return SerialCommSingleton. Instance pointer.
+///
 SerialCommSingleton* SerialCommSingleton::GetInstance() {
     return m_instance;
 }
 
-/*!
-   SerialCommSingleton private construct.
-*/
-
+///
+/// \brief SerialCommSingleton::m_instance. SerialCommSingleton private construct.
+///
 SerialCommSingleton* SerialCommSingleton::m_instance = new SerialCommSingleton();
 
-/*!
-   Connect the instrument with given com port and baudrate. Return TRUE if connect success, FALSE if connect failed.
-*/
+///
+/// \brief SerialCommSingleton::connInst. Connect the instrument with given com port and baudrate.
+/// Return TRUE if connect success, FALSE if connect failed.
+/// \param com_port
+/// \param baud_rate
+/// \return
+///
 bool SerialCommSingleton::connInst(const QString& com_port, const QString& baud_rate) {
     if(Comm_serialPort->isOpen()) {
         return false;
@@ -43,13 +50,12 @@ bool SerialCommSingleton::connInst(const QString& com_port, const QString& baud_
     return B_isConnected;
 }
 
-
-/*!
-   Write command to the opened port. CUSTOM private SLOT.
-   Command is dequequed from the QQ_cmd.
-   If serial port is not open, function will stop.
-   If QQ_cmd queque is empty, funciton will stop.
-*/
+///
+/// \brief SerialCommSingleton::sendCmd. Write command to the opened port. CUSTOM private SLOT.
+/// Command is dequequed from the QQ_cmd.
+/// If serial port is not open, function will stop.
+/// If QQ_cmd queque is empty, funciton will stop.
+///
 void SerialCommSingleton::sendCmd() {
     if(!Comm_serialPort->isOpen()) {
         return;
@@ -64,17 +70,19 @@ void SerialCommSingleton::sendCmd() {
     }
 }
 
-/*!
-   Read port data delay for 10ms to avoid incomplete data.
-*/
+///
+/// \brief SerialCommSingleton::portRecvDataDelay. Read port data delay for 10ms
+/// to avoid incomplete data.
+///
 void SerialCommSingleton::portRecvDataDelay() {
     QT_recvDelayTimer->stop();
     QT_recvDelayTimer->start(10);
 }
 
-/*!
-   Public function will write response to the given var.
-*/
+///
+/// \brief SerialCommSingleton::getResponse. Public function will write response to the given var.
+/// \param response
+///
 void SerialCommSingleton::getResponse(QString& response) {
     if(S_response.length() > 0) {
         response = S_cmdString
@@ -85,11 +93,11 @@ void SerialCommSingleton::getResponse(QString& response) {
     S_cmdString = "";
 }
 
-/*!
-   Read serial port data.
-   If serial port not open, function stops.
-   Otherwise function will emit the sendResponse signal.
-*/
+///
+/// \brief SerialCommSingleton::recvCommData. Read serial port data.
+/// If serial port not open, function stops.
+///    Otherwise function will emit the sendResponse signal.
+///
 void SerialCommSingleton::recvCommData() {
     QT_recvDelayTimer->stop();
     if(!Comm_serialPort->isOpen()) {
@@ -105,9 +113,10 @@ void SerialCommSingleton::recvCommData() {
     emit sendResponse(qm_resp);
 }
 
-/*!
-   Disconnect the serial port connection.
-*/
+///
+/// \brief SerialCommSingleton::disconnInst. Disconnect the serial port connection.
+/// \return bool. serialport isOpen.
+///
 bool SerialCommSingleton::disconnInst() {
     if(!Comm_serialPort->isOpen()) {
         return true;
@@ -116,10 +125,11 @@ bool SerialCommSingleton::disconnInst() {
     return !Comm_serialPort->isOpen();
 }
 
-/*!
-   Add command data to the queue.
-   For example: {"cmd_str", !#@O7}
-*/
+///
+/// \brief SerialCommSingleton::cmdEnQueue. Add command data to the queue.
+///  For example: {"cmd_str", !#@O7}
+/// \param qm_cmd
+///
 void SerialCommSingleton::cmdEnQueue(const QMap<QString, QByteArray> qm_cmd) {
     QQ_cmd.enqueue(qm_cmd);
 }

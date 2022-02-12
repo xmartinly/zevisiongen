@@ -14,7 +14,6 @@ class SerialCommSingleton:  public QObject {
 public:
     static SerialCommSingleton *GetInstance();
 
-
     bool connInst(const QString &com_port, const QString &baud_rate);
 
     bool getConnectState() {

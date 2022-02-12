@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    comm_setup_dialog.cpp \
     common_helper.cpp \
     main.cpp \
     qcustomplot.cpp \
@@ -16,12 +17,14 @@ SOURCES += \
     zevision_gen.cpp
 
 HEADERS += \
+    comm_setup_dialog.h \
     common_helper.h \
     qcustomplot.h \
     serial_comm_singleton.h \
     zevision_gen.h
 
 FORMS += \
+    comm_setup_dialog.ui \
     zevision_gen.ui
 
 TRANSLATIONS += \

@@ -28,6 +28,14 @@ background: transparent;
 padding: 1px 8px;
 }
 
+/*QGroupBox::title {
+color: rgb(0, 0, 0);
+subcontrol-origin: margin;
+subcontrol-position: top left;
+left:10px;
+top:0px;
+padding: 0px;
+}*/
 /*QAction::clearbutton
 {
 background: #AED8F9;
