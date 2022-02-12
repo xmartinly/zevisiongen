@@ -8,6 +8,8 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     Qt::WindowFlags flags = Qt::Dialog;
     flags |= Qt::WindowCloseButtonHint;
     setWindowFlags(flags);
+    qDebug() << H1_withOutLenChksum.toHex() << H1_withOutChksum.toHex()
+             << H1_withOutLen.toHex() << H1_withLenChksum.toHex();
 }
 
 CommSetupDialog::~CommSetupDialog() {

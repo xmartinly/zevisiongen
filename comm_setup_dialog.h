@@ -17,6 +17,17 @@ public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
+    enum ZevisionPortocol {
+        Without
+    };
+
+    const QByteArray H1_withOutLenChksum = QByteArrayLiteral("\x7b\x48\x31\x7d");
+    const QByteArray H1_withOutLen = QByteArrayLiteral("\x7b\x48\x31\x79\x7d");
+    const QByteArray H1_withOutChksum = QByteArrayLiteral("\x7b\x02\x00\x48\x31\x7d");
+    const QByteArray H1_withLenChksum = QByteArrayLiteral("\x7b\x02\x00\x48\x31\x79\x7d");
+
+
+
 public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
