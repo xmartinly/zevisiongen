@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QVariantMap>
+#include <QCloseEvent>
 #include "common_helper.h"
 #include "serial_comm_singleton.h"
 
@@ -13,13 +14,9 @@ namespace Ui {
 class CommSetupDialog : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
-
-    enum ZevisionPortocol {
-        Without
-    };
 
     const QByteArray H1_withOutLenChksum = QByteArrayLiteral("\x7b\x48\x31\x7d");
     const QByteArray H1_withOutLen = QByteArrayLiteral("\x7b\x48\x31\x79\x7d");
@@ -28,17 +25,22 @@ public:
 
 
 
-public slots:
+  public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
 
-private slots:
+  private slots:
     void on_close_btn_clicked();
 
     void on_conn_btn_clicked();
 
-private:
+  private:
     Ui::CommSetupDialog *ui;
+
+    CommonHelper *C_helper;
+    SerialCommSingleton *C_serial;
+
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // COMM_SETUP_DIALOG_H

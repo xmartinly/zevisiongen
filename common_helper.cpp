@@ -11,7 +11,7 @@ CommonHelper::CommonHelper() {
 /// \param values
 ///
 void CommonHelper::writeSettings(const QString fileName, const QString section, QMap<QString, QString> values) {
-    QSettings* f_iniFile = openSettingFile(&fileName);
+    QSettings *f_iniFile = openSettingFile(&fileName);
     f_iniFile->beginGroup(section);
     QMap<QString, QString>::const_iterator i;
     for( i = values.constBegin(); i != values.constEnd(); ++i) {
@@ -26,8 +26,8 @@ void CommonHelper::writeSettings(const QString fileName, const QString section, 
 /// \param fileName
 /// \param group
 ///
-void CommonHelper::deleteSection(const QString* fileName, const QString* group) {
-    QSettings* f_iniFile = openSettingFile(fileName);
+void CommonHelper::deleteSection(const QString *fileName, const QString *group) {
+    QSettings *f_iniFile = openSettingFile(fileName);
     f_iniFile->remove(*group);
     closeSettingFile(f_iniFile);
 }
@@ -36,7 +36,7 @@ void CommonHelper::deleteSection(const QString* fileName, const QString* group) 
 /// \brief CommonHelper::closeSettingFile. Close .ini setting file.
 /// \param settingFile
 ///
-void CommonHelper::closeSettingFile(QSettings* settingFile) {
+void CommonHelper::closeSettingFile(QSettings *settingFile) {
     delete settingFile;
     settingFile = nullptr;
 }
@@ -46,8 +46,8 @@ void CommonHelper::closeSettingFile(QSettings* settingFile) {
 /// \param fileName
 /// \return QStringList. Config file groups.
 ///
-QStringList CommonHelper::readGroups(const QString* fileName) {
-    QSettings* f_iniFile = openSettingFile(fileName);
+QStringList CommonHelper::readGroups(const QString *fileName) {
+    QSettings *f_iniFile = openSettingFile(fileName);
     QStringList sl_groups = f_iniFile->childGroups();
     closeSettingFile(f_iniFile);
     return sl_groups;
@@ -59,7 +59,7 @@ QStringList CommonHelper::readGroups(const QString* fileName) {
 /// \param filePath
 /// \return QSettings*. Config file pointer.
 ///
-QSettings* CommonHelper::openSettingFile(const QString* fileName, QString filePath) {
+QSettings *CommonHelper::openSettingFile(const QString *fileName, QString filePath) {
     QString currentDir = QDir::currentPath();
     QString s_file = (filePath != "" ? filePath : currentDir + "/") + *fileName;
     QFile outFile(s_file);
@@ -67,7 +67,7 @@ QSettings* CommonHelper::openSettingFile(const QString* fileName, QString filePa
         outFile.open(QFile::WriteOnly);
         outFile.close();
     }
-    QSettings* f_iniFile = new QSettings(s_file, QSettings::IniFormat);
+    QSettings *f_iniFile = new QSettings(s_file, QSettings::IniFormat);
     return f_iniFile;
 }
 
@@ -83,7 +83,7 @@ QMap<QString, QString> CommonHelper::readSection(
     const QString fileName,
     const QString section) {
     QMap<QString, QString> qm_config;
-    QSettings* f_iniFile = openSettingFile(&fileName);
+    QSettings *f_iniFile = openSettingFile(&fileName);
     f_iniFile->beginGroup(section);
     QStringList sl_keyList = f_iniFile->childKeys();
     f_iniFile->childKeys();
@@ -99,8 +99,8 @@ QMap<QString, QString> CommonHelper::readSection(
 /// \param fileName
 /// \return QMap<QString, QStringList>. Config file data.
 ///
-QMap<QString, QStringList> CommonHelper::readData(const QString* fileName) {
-    QSettings* f_iniFile = openSettingFile(fileName);
+QMap<QString, QStringList> CommonHelper::readData(const QString *fileName) {
+    QSettings *f_iniFile = openSettingFile(fileName);
     QMap<QString, QStringList> qm_data;
     QStringList sl_groupList = readGroups(fileName);
     foreach(QString group, sl_groupList) {
@@ -122,8 +122,8 @@ QMap<QString, QStringList> CommonHelper::readData(const QString* fileName) {
 /// \param fileName
 /// \return QMap<QString, QMap<QString, QString>>, data map of the config file.
 ///
-QMap<QString, QMap<QString, QString>> CommonHelper::readDataMap(const QString* fileName) {
-    QSettings* f_iniFile = openSettingFile(fileName);
+QMap<QString, QMap<QString, QString>> CommonHelper::readDataMap(const QString *fileName) {
+    QSettings *f_iniFile = openSettingFile(fileName);
     QMap<QString, QMap<QString, QString>> qm_data;
     QStringList sl_groupList = readGroups(fileName);
     foreach(QString group, sl_groupList) {
@@ -170,20 +170,23 @@ int CommonHelper::infTFCCks(QByteArray bytes) {
 /// \param cmd
 /// \return
 ///
-QMap<QString, QByteArray> CommonHelper::ZevisonCommandGenAlpha(const QString *cmd) {
+QMap<QString, QByteArray> CommonHelper::ZevisonCommandGenAlpha(const QString *cmd, const int protocol) {
     QMap<QString, QByteArray> qm_cmd;
     QByteArray ba_cmd = cmd->toLocal8Bit(); //convert to byte array
-    int i_sum = 0;
-    foreach (char s, ba_cmd) {
-        qDebug() << (int)s;
-        i_sum += (int)s;
-    }
     qm_cmd.insert("cmd_str", ba_cmd); //insert cmd string to qmap
-    int i_cmdLen = cmd->length(); //calculate cmd length
-    ba_cmd.append((int)(i_sum % 256)); //append checksum
-    ba_cmd.prepend((char)i_cmdLen);
-    if(i_cmdLen < 255) {
-        ba_cmd.prepend('\x00');
+    int i_sum = 0;
+    if(3 > protocol > 0) { //calculate checksum
+        foreach (char s, ba_cmd) {
+            i_sum += (int)s;
+        }
+        ba_cmd.append((int)(i_sum % 256));
+    }
+    if(protocol > 1) { //calculate cmd length
+        int i_cmdLen = cmd->length();
+        ba_cmd.prepend((char)i_cmdLen);
+        if(i_cmdLen < 255) {
+            ba_cmd.prepend('\x00');
+        }
     }
     ba_cmd.prepend('{');
     ba_cmd.append('}');

@@ -10,7 +10,9 @@
 #include <QSettings>
 
 class CommonHelper {
-public:
+    Q_ENUMS(ZevisionPortocol)
+    Q_ENUMS(ControllerType)
+  public:
     CommonHelper();
 
 
@@ -22,6 +24,22 @@ public:
     enum ControllerBand {
         SigmaInst,
         InficonInst
+    };
+    enum ControllerType {
+        SQC310,
+        XTC3,
+        IC6CYGNUS2,
+        IMC300
+    };
+
+    ///
+    /// \brief Binary format.0000: no checksum no length,0001 no checksum; 0010: no length.
+    /// 0011: checksum and length
+    ///
+    enum ZevisionPortocol {
+        ZevisionLenght = 1, ///< Command with length only.
+        ZevisionChecksum = 2, ///< Command with checksum only.
+        ZevisionOptional = 3 ///< Command with length and checksum.
     };
 
 
@@ -44,7 +62,7 @@ public:
 
     QString hexToBinary(const QString Hex);
 
-    QMap<QString, QByteArray> ZevisonCommandGenAlpha(const QString *cmd);
+    QMap<QString, QByteArray> ZevisonCommandGenAlpha(const QString *cmd, const int protocol);
 
     QMap<QString, QStringList> readData(const QString *fileName);
 
@@ -199,5 +217,8 @@ public:
         return a > b ? b : a;
     }
 };
+extern const QMetaObject staticMetaObject;
+Q_DECLARE_METATYPE(CommonHelper::ZevisionPortocol)
+Q_DECLARE_METATYPE(CommonHelper::ControllerType)
 
 #endif // COMMONHELPER_H

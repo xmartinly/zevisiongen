@@ -8,14 +8,14 @@ SerialCommSingleton::SerialCommSingleton() {
 /// \brief SerialCommSingleton::GetInstance
 /// \return SerialCommSingleton. Instance pointer.
 ///
-SerialCommSingleton* SerialCommSingleton::GetInstance() {
+SerialCommSingleton *SerialCommSingleton::GetInstance() {
     return m_instance;
 }
 
 ///
 /// \brief SerialCommSingleton::m_instance. SerialCommSingleton private construct.
 ///
-SerialCommSingleton* SerialCommSingleton::m_instance = new SerialCommSingleton();
+SerialCommSingleton *SerialCommSingleton::m_instance = new SerialCommSingleton();
 
 ///
 /// \brief SerialCommSingleton::connInst. Connect the instrument with given com port and baudrate.
@@ -24,7 +24,7 @@ SerialCommSingleton* SerialCommSingleton::m_instance = new SerialCommSingleton()
 /// \param baud_rate
 /// \return
 ///
-bool SerialCommSingleton::connInst(const QString& com_port, const QString& baud_rate) {
+bool SerialCommSingleton::connInst(const QString &com_port, const QString &baud_rate) {
     if(Comm_serialPort->isOpen()) {
         return false;
     }
@@ -83,7 +83,7 @@ void SerialCommSingleton::portRecvDataDelay() {
 /// \brief SerialCommSingleton::getResponse. Public function will write response to the given var.
 /// \param response
 ///
-void SerialCommSingleton::getResponse(QString& response) {
+void SerialCommSingleton::getResponse(QString &response) {
     if(S_response.length() > 0) {
         response = S_cmdString
                    + ":"
