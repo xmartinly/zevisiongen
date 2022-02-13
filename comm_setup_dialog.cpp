@@ -41,13 +41,13 @@ void CommSetupDialog::on_conn_btn_clicked() {
     }
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText();
-//    if(C_serial->connInst(s_port, s_baudrate)) {
-    for (int i = 0; i < 4 ; i++ ) {
-        qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
-        C_serial->cmdEnQueue(
-            C_helper->zevisonCommandGenAlpha(&S_hello, i)
-        );
-//        }
+    if(C_serial->connInst(s_port, s_baudrate)) {
+        for (int i = 0; i < 4 ; i++ ) {
+            qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
+            C_serial->cmdEnQueue(
+                C_helper->zevisonCommandGenAlpha(&S_hello, i)
+            );
+        }
     }
 }
 
@@ -73,6 +73,10 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
 }
 
 void CommSetupDialog::on_set_btn_clicked() {
-    qDebug() << CommonHelper::ZevisionChecksum;
+    qDebug() << C_serial->getConnectState();
+    QString s_help = "?";
+    C_serial->cmdEnQueue(
+        C_helper->zevisonCommandGenAlpha(&s_help, 3)
+    );
 }
 
