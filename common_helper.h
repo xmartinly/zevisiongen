@@ -46,6 +46,13 @@ class CommonHelper : public QObject {
         ZevisionOptional = 3 ///< Command with length and checksum.
     };
     Q_ENUM(ZevisionPortocol)
+    enum ZevisionAction {
+        Update,
+        Query,
+        Add,
+        Delete,
+        Echo
+    };
 
     static int infTFCCks(QByteArray bytes);
 

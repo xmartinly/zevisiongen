@@ -83,3 +83,9 @@ void ZevisionGen::onInstConnectState() {
     }
 }
 
+
+void ZevisionGen::on_send_btn_clicked() {
+    ZevisionInst *inst = new ZevisionInst;
+    inst->CommandGen(3, "she is a girl", "she is so beatiful", "but i don't know her name..");
+}
+

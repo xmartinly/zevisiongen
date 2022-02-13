@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     comm_setup_dialog.cpp \
     common_helper.cpp \
-    inficon_inst_data_cal.cpp \
     main.cpp \
     qcustomplot.cpp \
     serial_comm_singleton.cpp \
@@ -20,7 +19,7 @@ SOURCES += \
 HEADERS += \
     comm_setup_dialog.h \
     common_helper.h \
-    inficon_inst_data_cal.h \
+    inficon_inst.h \
     qcustomplot.h \
     serial_comm_singleton.h \
     zevision_gen.h
