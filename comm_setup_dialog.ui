@@ -261,7 +261,7 @@
     </spacer>
    </item>
    <item row="3" column="2">
-    <widget class="QPushButton" name="conn_btn_2">
+    <widget class="QPushButton" name="set_btn">
      <property name="minimumSize">
       <size>
        <width>66</width>

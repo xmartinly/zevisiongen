@@ -7,7 +7,7 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     ui->setupUi(this);
     C_serial = SerialCommSingleton::GetInstance();
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &ZevisionGen::onRecvResponse);
-    L_statStr = new QLabel("Inst offline. | Zevision Command Generate v0.01 beta");
+    L_statStr = new QLabel("Inst Offline." + S_version);
     L_statStr->setAlignment(Qt::AlignRight);
     statusBar()->setSizeGripEnabled(false);
     statusBar()->addPermanentWidget(L_statStr, 1);
@@ -52,7 +52,7 @@ void ZevisionGen::on_actionDocument_triggered() {
 }
 
 void ZevisionGen::onInstConnectState() {
-    QMap<QString, QString> qm_commConfig = C_helper->readSection("./", "sqc310comm.ini", "Communication");
+    QMap<QString, QString> qm_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
     if(qm_commConfig.count() < 3) {
         C_helper->normalErr(1,
                             u8"Comm Config Error",
@@ -71,7 +71,7 @@ void ZevisionGen::onInstConnectState() {
         return;
     }
     B_isInstConnected = C_serial->getConnectState();
-    L_statStr->setText(B_isInstConnected ? "Inst Online." : "Inst Offline" + S_version);
+    L_statStr->setText(B_isInstConnected ? "Inst Online." : "Inst Offline." + S_version);
     QString s_port, s_baudrate;
     if(qm_commConfig.count() == 3) {
         s_baudrate = qm_commConfig["Baudrate"];
