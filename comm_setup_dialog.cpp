@@ -7,6 +7,8 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     ui->setupUi(this);
     Qt::WindowFlags flags = Qt::Dialog;
     flags |= Qt::WindowCloseButtonHint;
+    C_serial = SerialCommSingleton::GetInstance();
+    C_helper = new CommonHelper;
 //    setWindowFlags(flags);
 //    qDebug() << H1_withOutLenChksum.toHex() << H1_withOutChksum.toHex()
 //             << H1_withOutLen.toHex() << H1_withLenChksum.toHex();
