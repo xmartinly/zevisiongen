@@ -175,13 +175,13 @@ QMap<QString, QByteArray> CommonHelper::ZevisonCommandGenAlpha(const QString *cm
     QByteArray ba_cmd = cmd->toLocal8Bit(); //convert to byte array
     qm_cmd.insert("cmd_str", ba_cmd); //insert cmd string to qmap
     int i_sum = 0;
-    if(3 > protocol > 0) { //calculate checksum
+    if(protocol == CommonHelper::ZevisionChecksum || protocol == CommonHelper::ZevisionOptional) { //calculate checksum
         foreach (char s, ba_cmd) {
             i_sum += (int)s;
         }
         ba_cmd.append((int)(i_sum % 256));
     }
-    if(protocol > 1) { //calculate cmd length
+    if(protocol == CommonHelper::ZevisionLenght || protocol == CommonHelper::ZevisionOptional) { //calculate cmd length
         int i_cmdLen = cmd->length();
         ba_cmd.prepend((char)i_cmdLen);
         if(i_cmdLen < 255) {

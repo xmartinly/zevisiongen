@@ -18,12 +18,7 @@ class CommSetupDialog : public QDialog {
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
-    const QByteArray H1_withOutLenChksum = QByteArrayLiteral("\x7b\x48\x31\x7d");
-    const QByteArray H1_withOutLen = QByteArrayLiteral("\x7b\x48\x31\x79\x7d");
-    const QByteArray H1_withOutChksum = QByteArrayLiteral("\x7b\x02\x00\x48\x31\x7d");
-    const QByteArray H1_withLenChksum = QByteArrayLiteral("\x7b\x02\x00\x48\x31\x79\x7d");
-
-
+    const QString S_hello = "H1";
 
   public slots:
 
