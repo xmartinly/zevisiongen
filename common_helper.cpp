@@ -1,7 +1,7 @@
 ﻿#include "common_helper.h"
 
 
-CommonHelper::CommonHelper() {
+CommonHelper::CommonHelper(QObject *parent) {
 }
 
 ///
@@ -170,10 +170,10 @@ int CommonHelper::infTFCCks(QByteArray bytes) {
 /// \param cmd
 /// \return
 ///
-QMap<QString, QByteArray> CommonHelper::ZevisonCommandGenAlpha(const QString *cmd, const int protocol) {
+QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cmd, const int protocol) {
     QMap<QString, QByteArray> qm_cmd;
     QByteArray ba_cmd = cmd->toLocal8Bit(); //convert to byte array
-    qm_cmd.insert("cmd_str", ba_cmd); //insert cmd string to qmap
+    qm_cmd.insert("cmd_str", ba_cmd + '&' + (char)protocol); //insert cmd string to qmap
     int i_sum = 0;
     if(protocol == CommonHelper::ZevisionChecksum || protocol == CommonHelper::ZevisionOptional) { //calculate checksum
         foreach (char s, ba_cmd) {

@@ -68,6 +68,9 @@ void ZevisionGen::onInstConnectState() {
                             u8"通信错误",
                             u8"仪器无法连接, 请检测连接设置."
                            );
+        if(QT_statTimer->isActive()) {
+            QT_statTimer->stop();
+        }
         return;
     }
     B_isInstConnected = C_serial->getConnectState();

@@ -29,6 +29,8 @@ class CommSetupDialog : public QDialog {
 
     void on_conn_btn_clicked();
 
+    void on_set_btn_clicked();
+
   private:
     Ui::CommSetupDialog *ui;
 

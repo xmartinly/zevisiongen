@@ -2,6 +2,7 @@
 #define COMMONHELPER_H
 
 #include <QMessageBox>
+#include <QObject>
 #include <QIcon>
 #include <QFile>
 #include <QMap>
@@ -9,11 +10,12 @@
 #include <QDebug>
 #include <QSettings>
 
-class CommonHelper {
-    Q_ENUMS(ZevisionPortocol)
-    Q_ENUMS(ControllerType)
+class CommonHelper : public QObject {
+    Q_OBJECT
+//    Q_ENUMS(ZevisionPortocol)
+//    Q_ENUMS(ControllerType)
   public:
-    CommonHelper();
+    CommonHelper(QObject *parent = 0);
 
 
     enum CommandType {
@@ -31,7 +33,9 @@ class CommonHelper {
         IC6CYGNUS2,
         IMC300
     };
-
+    Q_ENUM(ControllerType)
+//    enum Priority { High, Low, VeryHigh, VeryLow };
+//    Q_ENUM(Priority)
     ///
     /// \brief Binary format.0000: no checksum no length,0001 no checksum; 0010: no length.
     /// 0011: checksum and length
@@ -41,7 +45,7 @@ class CommonHelper {
         ZevisionChecksum = 2, ///< Command with checksum only.
         ZevisionOptional = 3 ///< Command with length and checksum.
     };
-
+    Q_ENUM(ZevisionPortocol)
 
     static int infTFCCks(QByteArray bytes);
 
@@ -62,7 +66,7 @@ class CommonHelper {
 
     QString hexToBinary(const QString Hex);
 
-    QMap<QString, QByteArray> ZevisonCommandGenAlpha(const QString *cmd, const int protocol);
+    QMap<QString, QByteArray> zevisonCommandGenAlpha(const QString *cmd, const int protocol);
 
     QMap<QString, QStringList> readData(const QString *fileName);
 
@@ -217,8 +221,8 @@ class CommonHelper {
         return a > b ? b : a;
     }
 };
-extern const QMetaObject staticMetaObject;
-Q_DECLARE_METATYPE(CommonHelper::ZevisionPortocol)
-Q_DECLARE_METATYPE(CommonHelper::ControllerType)
+//extern const QMetaObject staticMetaObject;
+//Q_DECLARE_METATYPE(CommonHelper::ZevisionPortocol)
+//Q_DECLARE_METATYPE(CommonHelper::ControllerType)
 
 #endif // COMMONHELPER_H
