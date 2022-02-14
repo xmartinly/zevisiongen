@@ -10,10 +10,18 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     C_serial = SerialCommSingleton::GetInstance();
     C_helper = new CommonHelper;
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );
-//    setWindowFlags(flags);
-//    qDebug() << H1_withOutLenChksum.toHex() << H1_withOutChksum.toHex()
-//             << H1_withOutLen.toHex() << H1_withLenChksum.toHex();
-//             << (CommonHelper::ZevisionWithChecksum | CommonHelper::ZevisionWithLenght);
+    QMap<QString, QString> qm_commConfig = C_helper->readSection("./", "zevision.ini", "Communication"); //Read communication config from .ini file.
+    qDebug() << qm_commConfig;
+    if(qm_commConfig.count() == 3) {
+        ui->baudrate_cb->setCurrentText(qm_commConfig["Baudrate"]);
+        ui->port_cb->setCurrentText(qm_commConfig["Port"]);
+        int i_protocol = qm_commConfig["Protocol"].toInt();
+        bool b_isLength = i_protocol % 2;
+        bool b_isChksum = i_protocol > 1 ;
+        qDebug() << b_isLength << (char)i_protocol;
+        ui->chk_chkbox->setChecked(b_isChksum);
+        ui->length_chkbox->setChecked(b_isLength);
+    }
 }
 
 CommSetupDialog::~CommSetupDialog() {
