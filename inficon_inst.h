@@ -1,4 +1,4 @@
-#ifndef INFICON_INST_H
+﻿#ifndef INFICON_INST_H
 #define INFICON_INST_H
 
 #include <QObject>
@@ -12,16 +12,16 @@
 class InficonInst: public QObject {
     Q_OBJECT
 
-  public:
-    virtual QMap<QString, QByteArray> CommandGen(int num, const char *msg, ...);
+protected:
+    virtual int CommandGen() = 0;
 
-    virtual QMap<QString, QByteArray> ResponseCal(const QByteArray response, ...);
+    virtual int ResponseCal() = 0;
 
 };
 
 class ZevisionInst: public InficonInst {
     Q_OBJECT
-  public:
+public:
 
     ///
     /// \brief Binary format.0000: no checksum no length,0001 no checksum; 0010: no length.
@@ -40,18 +40,18 @@ class ZevisionInst: public InficonInst {
     /// \param protocol
     /// \return
     ///
-    inline QMap<QString, QByteArray> CommandGen(int num, const char *msg, ...) {
-        QMap<QString, QByteArray> qm_cmd;
-        QString tmp;
-        va_list args;
-        tmp += "[ " + QString(msg) + " ] ";
-        va_start(args, msg);
-        QString str = QString(va_arg(args, char *));
-        if(!str.trimmed().isEmpty()) {
-            tmp += "[ " + str + " ] ";
-        }
-        va_end(args);
-        qDebug() << QString("(%1) ").arg(num) + tmp;
+    int CommandGen() {
+//        QMap<QString, QByteArray> qm_cmd;
+//        QString tmp;
+//        va_list args;
+//        tmp += "[ " + QString(msg) + " ] ";
+//        va_start(args, msg);
+//        QString str = QString(va_arg(args, char *));
+//        if(!str.trimmed().isEmpty()) {
+//            tmp += "[ " + str + " ] ";
+//        }
+//        va_end(args);
+//        qDebug() << QString("(%1) ").arg(num) + tmp;
 //        QByteArray ba_cmd = cmd.toLocal8Bit(); //convert to byte array
 //        qm_cmd.insert("cmd_str", ba_cmd + '&' + (char)protocol); //insert cmd string to qmap
 //        int i_sum = 0;
@@ -71,7 +71,7 @@ class ZevisionInst: public InficonInst {
 //        ba_cmd.prepend('{');
 //        ba_cmd.append('}');
 //        qm_cmd.insert("cmd_treated", ba_cmd);
-        return qm_cmd;
+        return 0;
     }
 };
 

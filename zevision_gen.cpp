@@ -14,7 +14,7 @@ ZevisionGen::ZevisionGen(QWidget *parent)
 //    ui->splitter->setSizes({{9, 1}});
     QT_statTimer = new QTimer( this );
     connect( QT_statTimer, SIGNAL(timeout()), this, SLOT(onInstConnectState()));
-    QT_statTimer->start(1000);
+    onReadCommConfig();
 }
 
 ZevisionGen::~ZevisionGen() {
@@ -36,6 +36,7 @@ void ZevisionGen::on_actionExit_triggered() {
 
 void ZevisionGen::on_actionCommSettings_triggered() {
     D_commSet = new CommSetupDialog;
+    connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadCommConfig);
     D_commSet->exec();
 }
 
@@ -52,8 +53,17 @@ void ZevisionGen::on_actionDocument_triggered() {
 }
 
 void ZevisionGen::onInstConnectState() {
-    QMap<QString, QString> qm_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
-    if(qm_commConfig.count() < 3) {
+    B_isInstConnected = C_serial->getConnectState();
+    L_statStr->setText((B_isInstConnected ? "Port open." : "Port close.") + S_version);
+    if(!B_isInstConnected) {
+        C_serial->connInst(S_port, S_baudrate);
+    } else {
+        if(QT_statTimer->isActive()) {
+            QT_statTimer->stop();
+        }
+    }
+//    qDebug() << L_statStr->text() << S_version;
+    if(QM_commConfig.count() != 3) {
         C_helper->normalErr(1,
                             u8"Comm Config Error",
                             u8"No communication config found."
@@ -71,15 +81,19 @@ void ZevisionGen::onInstConnectState() {
         if(QT_statTimer->isActive()) {
             QT_statTimer->stop();
         }
+//        D_commSet->exec();
         return;
     }
-    B_isInstConnected = C_serial->getConnectState();
-    L_statStr->setText(B_isInstConnected ? "Inst Online." : "Inst Offline." + S_version);
-    QString s_port, s_baudrate;
-    if(qm_commConfig.count() == 3) {
-        s_baudrate = qm_commConfig["Baudrate"];
-        s_port = qm_commConfig["Port"];
-        I_connectInstTryCount +=  C_serial->connInst(s_port, s_baudrate) ? 0 : 1;
+    I_connectInstTryCount++;
+}
+
+void ZevisionGen::onReadCommConfig() {
+    QM_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
+    S_port = QM_commConfig["Port"];
+    S_baudrate = QM_commConfig["Baudrate"];
+    I_protocol = QM_commConfig["Protocol"].toInt();
+    if(!QT_statTimer->isActive()) {
+        QT_statTimer->start(1000);
     }
 }
 

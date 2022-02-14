@@ -22,6 +22,8 @@ public:
 
     int I_zevisionProtocol = 3;
 
+    void setCommConfig();
+
 public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
@@ -39,9 +41,10 @@ private:
     CommonHelper *C_helper;
     SerialCommSingleton *C_serial;
 
-
-
     void closeEvent(QCloseEvent *event);
+
+signals:
+    void configSetted();
 };
 
 #endif // COMM_SETUP_DIALOG_H

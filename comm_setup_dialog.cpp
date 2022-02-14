@@ -11,14 +11,13 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     C_helper = new CommonHelper;
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );
     QMap<QString, QString> qm_commConfig = C_helper->readSection("./", "zevision.ini", "Communication"); //Read communication config from .ini file.
-    qDebug() << qm_commConfig;
     if(qm_commConfig.count() == 3) {
         ui->baudrate_cb->setCurrentText(qm_commConfig["Baudrate"]);
         ui->port_cb->setCurrentText(qm_commConfig["Port"]);
         int i_protocol = qm_commConfig["Protocol"].toInt();
         bool b_isLength = i_protocol % 2;
         bool b_isChksum = i_protocol > 1 ;
-        qDebug() << b_isLength << (char)i_protocol;
+//        qDebug() << b_isLength << (char)i_protocol;
         ui->chk_chkbox->setChecked(b_isChksum);
         ui->length_chkbox->setChecked(b_isLength);
     }
@@ -28,7 +27,7 @@ CommSetupDialog::~CommSetupDialog() {
     delete ui;
 }
 
-void CommSetupDialog::on_close_btn_clicked() {
+void CommSetupDialog::setCommConfig() {
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText(),
             s_fileName = "zevision.ini",
@@ -40,6 +39,10 @@ void CommSetupDialog::on_close_btn_clicked() {
     qm_commSetup.insert("Baudrate", s_baudrate);
     qm_commSetup.insert("Protocol", QString::number(i_protocol));
     C_helper->writeSettings(s_fileName, s_section, qm_commSetup);
+}
+
+void CommSetupDialog::on_close_btn_clicked() {
+    setCommConfig();
     this->close();
 }
 
@@ -62,12 +65,8 @@ void CommSetupDialog::on_conn_btn_clicked() {
 
 
 void CommSetupDialog::closeEvent(QCloseEvent *event) {
-//    if(QT_commTimer->isActive()) {
-//        QT_commTimer->stop();
-//    }
-//    delete QT_commTimer;
-//    delete C_helper;
-//    delete C_sigmaTfc;
+    setCommConfig();
+    emit configSetted();
     event->accept();
 }
 
@@ -84,10 +83,29 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
 }
 
 void CommSetupDialog::on_set_btn_clicked() {
-//    qDebug() << C_serial->getConnectState();
-    QString s_help = "?";
-    C_serial->cmdEnQueue(
-        C_helper->zevisonCommandGenAlpha(&s_help, 3)
-    );
+    QString s_protocolConfig = QString("UG1305:%1;UG1304:%2").arg((int)ui->length_chkbox->isChecked()).arg((int)ui->chk_chkbox->isChecked());
+//    qDebug() << s_protocolConfig;
+    if(!C_serial->getConnectState()) {
+        QString s_port = ui->port_cb->currentText(),
+                s_baudrate = ui->baudrate_cb->currentText();
+        int i_protocol = ui->chk_chkbox->checkState() //If checked will return 2
+                         + (int)ui->length_chkbox->isChecked();
+        if(C_serial->connInst(s_port, s_baudrate)) {
+            C_serial->cmdEnQueue(
+                C_helper->zevisonCommandGenAlpha(&s_protocolConfig, (CommonHelper::ZevisionPortocol)i_protocol)
+            );
+        }
+    }
+    QString s_port = ui->port_cb->currentText(),
+            s_baudrate = ui->baudrate_cb->currentText();
+    QString s_protocol = "QG05";
+    if(C_serial->connInst(s_port, s_baudrate)) {
+        for (int i = 0; i < 4 ; i++ ) {
+//            qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
+            C_serial->cmdEnQueue(
+                C_helper->zevisonCommandGenAlpha(&s_protocol, i)
+            );
+        }
+    }
 }
 

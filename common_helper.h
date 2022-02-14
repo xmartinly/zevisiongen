@@ -85,17 +85,17 @@ public:
     };
     static int infTFCCks(QByteArray bytes);
 
-    static int hexStrToInt( QString hex_str);
+    inline static int hexStrToInt( QString hex_str);
 
-    static float byteArrayToFloat(QByteArray data);
+    inline static float byteArrayToFloat(QByteArray data);
 
-    static float freqCal(const QByteArray data, bool is_xtc = false);
+    inline static float freqCal(const QByteArray data, bool is_xtc = false);
 
     static void normalErr(const int errLevel, const QString errorTitle, const QString errorMsg);
 
-    static QByteArray reviseData(QByteArray Bytes);
+    inline static QByteArray reviseData(QByteArray Bytes);
 
-    static QString formatHexStr(QString hexStr);
+    inline static QString formatHexStr(QString hexStr);
 
     QByteArray strToByteArray(const QString *s_cmd);
 
@@ -210,7 +210,7 @@ public:
     /// \param b
     /// \return int
     ///
-    static int maxNumber(const int a, const int b) {
+    inline static int maxNumber(const int a, const int b) {
         return a > b ? a : b;
     }
 
@@ -220,7 +220,7 @@ public:
     /// \param b
     /// \return float
     ///
-    static float maxNumber(const float a, const float b) {
+    inline static float maxNumber(const float a, const float b) {
         return a > b ? a : b;
     }
     ///
@@ -229,7 +229,7 @@ public:
     /// \param b
     /// \return double
     ///
-    static double maxNumber(const double a, const double b) {
+    inline static double maxNumber(const double a, const double b) {
         return a > b ? a : b;
     }
 
@@ -239,7 +239,7 @@ public:
     /// \param b
     /// \return int
     ///
-    static int minNumber(const int a, const int b) {
+    inline static int minNumber(const int a, const int b) {
         return a > b ? b : a;
     }
 
@@ -249,7 +249,7 @@ public:
     /// \param b
     /// \return float
     ///
-    static int minNumber(const float a, const float b) {
+    inline static int minNumber(const float a, const float b) {
         return a > b ? b : a;
     }
 
@@ -259,7 +259,7 @@ public:
     /// \param b
     /// \return double
     ///
-    static int minNumber(const double a, const double b) {
+    inline static int minNumber(const double a, const double b) {
         return a > b ? b : a;
     }
 };
