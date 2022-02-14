@@ -14,28 +14,32 @@ namespace Ui {
 class CommSetupDialog : public QDialog {
     Q_OBJECT
 
-  public:
+public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
     const QString S_hello = "H1";
 
-  public slots:
+    int I_zevisionProtocol = 3;
+
+public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
 
-  private slots:
+private slots:
     void on_close_btn_clicked();
 
     void on_conn_btn_clicked();
 
     void on_set_btn_clicked();
 
-  private:
+private:
     Ui::CommSetupDialog *ui;
 
     CommonHelper *C_helper;
     SerialCommSingleton *C_serial;
+
+
 
     void closeEvent(QCloseEvent *event);
 };

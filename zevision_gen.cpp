@@ -22,7 +22,7 @@ ZevisionGen::~ZevisionGen() {
 }
 
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
-    qDebug() << QDateTime::currentDateTime() << qm_data["data"].toByteArray() << qm_data["data"].toByteArray().toHex();
+//    qDebug() << QDateTime::currentDateTime() << qm_data["data"].toByteArray() << qm_data["data"].toByteArray().toHex();
 }
 
 
@@ -85,7 +85,7 @@ void ZevisionGen::onInstConnectState() {
 
 
 void ZevisionGen::on_send_btn_clicked() {
-    ZevisionInst *inst = new ZevisionInst;
-    inst->CommandGen(3, "she is a girl", "she is so beatiful", "but i don't know her name..");
+//    ZevisionInst *inst = new ZevisionInst;
+//    inst->CommandGen(3, "she is a girl", "she is so beatiful", "but i don't know her name..");
 }
 

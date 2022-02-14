@@ -14,7 +14,7 @@ class CommonHelper : public QObject {
     Q_OBJECT
 //    Q_ENUMS(ZevisionPortocol)
 //    Q_ENUMS(ControllerType)
-  public:
+public:
     CommonHelper(QObject *parent = 0);
 
 
@@ -37,8 +37,8 @@ class CommonHelper : public QObject {
 //    enum Priority { High, Low, VeryHigh, VeryLow };
 //    Q_ENUM(Priority)
     ///
-    /// \brief Binary format.0000: no checksum no length,0001 no checksum; 0010: no length.
-    /// 0011: checksum and length
+    /// \brief Binary format.0000: no checksum no length; 0001: no checksum; 0010: no length;
+    /// 0011: checksum and length.
     ///
     enum ZevisionPortocol {
         ZevisionLenght = 1, ///< Command with length only.
@@ -46,6 +46,10 @@ class CommonHelper : public QObject {
         ZevisionOptional = 3 ///< Command with length and checksum.
     };
     Q_ENUM(ZevisionPortocol)
+
+    ///
+    /// \brief The ZevisionAction enum.
+    ///
     enum ZevisionAction {
         Update,
         Query,
@@ -53,7 +57,32 @@ class CommonHelper : public QObject {
         Delete,
         Echo
     };
+    Q_ENUM(ZevisionAction)
 
+    ///
+    /// \brief The ZevisionErrorCode enum.
+    /// A: Illegal command, the command is not supported;
+    /// B: Illegal parameter value;
+    /// C: Checksum error (only when checksum is enabled);
+    /// D: Illegal format;
+    /// F: State error, the system is in the wrong state;
+    /// L: Length error (only when length is enabled);
+    /// T: Time out, only part of a command was received.
+    /// Success: +
+    /// Fail: -
+    ///
+    enum ZevisionErrorCode {A = 0x41, B = 0x42, C = 0x43, D = 0x44, F = 0x46, L = 0x4c, T = 0x54, Success = 0x2b, Fail = 0x2d};
+    Q_ENUM(ZevisionErrorCode)
+
+    const QMap<ZevisionErrorCode, QString> QM_errorMsg = {
+        {A, "Illegal command, the command is not supported."},
+        {B, "Illegal parameter value"},
+        {C, "Checksum error (only when checksum is enabled)."},
+        {D, "Illegal format"},
+        {F, "State error, the system is in the wrong state."},
+        {L, "Length error (only when length is enabled)."},
+        {T, "Time out, only part of a command was received."},
+    };
     static int infTFCCks(QByteArray bytes);
 
     static int hexStrToInt( QString hex_str);
@@ -68,12 +97,18 @@ class CommonHelper : public QObject {
 
     static QString formatHexStr(QString hexStr);
 
-
     QByteArray strToByteArray(const QString *s_cmd);
 
     QString hexToBinary(const QString Hex);
 
+
+
     QMap<QString, QByteArray> zevisonCommandGenAlpha(const QString *cmd, const int protocol);
+
+    QVariantMap zevisonMessageCal(const QByteArray response, int protocol);
+
+    QString zevisionErrorMsg(ZevisionErrorCode) const;
+
 
     QMap<QString, QStringList> readData(const QString *fileName);
 

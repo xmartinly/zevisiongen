@@ -9,6 +9,7 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     flags |= Qt::WindowCloseButtonHint;
     C_serial = SerialCommSingleton::GetInstance();
     C_helper = new CommonHelper;
+    connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );
 //    setWindowFlags(flags);
 //    qDebug() << H1_withOutLenChksum.toHex() << H1_withOutChksum.toHex()
 //             << H1_withOutLen.toHex() << H1_withLenChksum.toHex();
@@ -43,7 +44,7 @@ void CommSetupDialog::on_conn_btn_clicked() {
             s_baudrate = ui->baudrate_cb->currentText();
     if(C_serial->connInst(s_port, s_baudrate)) {
         for (int i = 0; i < 4 ; i++ ) {
-            qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
+//            qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
             C_serial->cmdEnQueue(
                 C_helper->zevisonCommandGenAlpha(&S_hello, i)
             );
@@ -69,11 +70,13 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
 //    if(qm_resp.size() < 2) {
 //        return;
 //    }
-    qDebug() << qm_resp;
+    QByteArray ba_response = qm_resp["data"].toByteArray();
+    C_helper->zevisonMessageCal(ba_response, CommonHelper::ZevisionOptional);
+//    qDebug() << qm_resp;
 }
 
 void CommSetupDialog::on_set_btn_clicked() {
-    qDebug() << C_serial->getConnectState();
+//    qDebug() << C_serial->getConnectState();
     QString s_help = "?";
     C_serial->cmdEnQueue(
         C_helper->zevisonCommandGenAlpha(&s_help, 3)

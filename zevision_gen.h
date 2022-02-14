@@ -11,7 +11,7 @@
 #include "serial_comm_singleton.h"
 #include "common_helper.h"
 #include "comm_setup_dialog.h"
-#include "inficon_inst.h"
+//#include "inficon_inst.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,7 +22,7 @@ QT_END_NAMESPACE
 class ZevisionGen : public QMainWindow {
     Q_OBJECT
 
-  public:
+public:
     ZevisionGen(QWidget *parent = nullptr);
     ~ZevisionGen();
 
@@ -34,13 +34,13 @@ class ZevisionGen : public QMainWindow {
 
 
 
-  public slots:
+public slots:
 
     void onRecvResponse(QVariantMap);
 
     void onInstConnectState();
 
-  private slots:
+private slots:
     void on_actionDataLogSetting_triggered();
 
     void on_actionExit_triggered();
@@ -55,7 +55,7 @@ class ZevisionGen : public QMainWindow {
 
     void on_send_btn_clicked();
 
-  private:
+private:
     Ui::ZevisionGen *ui;
 
     CommonHelper *C_helper;

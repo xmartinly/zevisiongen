@@ -4,6 +4,15 @@
 CommonHelper::CommonHelper(QObject *parent) {
 }
 
+QString CommonHelper::zevisionErrorMsg(ZevisionErrorCode code) const {
+    return QM_errorMsg[code];
+}
+
+//QString CommonHelper::zevisionErrorMsg(const int error_code) const {
+//    ZevisionErrorCode  error = error_code;
+//    return QM_errorMsg[error_code];
+//}
+
 ///
 /// \brief CommonHelper::writeSettings. Write settings to .ini file.
 /// \param fileName
@@ -192,6 +201,25 @@ QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cm
     ba_cmd.append('}');
     qm_cmd.insert("cmd_treated", ba_cmd);
     return qm_cmd;
+}
+
+QVariantMap CommonHelper::zevisonMessageCal(const QByteArray response, int protocol) {
+    QVariantMap qm_resp;
+    QByteArray ba_resp;
+    QString s_error = "";
+    int i_responseLen = response.length();
+    QByteArray ba_msgLen = response.mid(1, 2);
+    int i_msgLen = 0;
+    for(int i = 0; i < 2; i++) {
+        i_msgLen = (int)ba_msgLen.at(0) * 255 + (int)ba_msgLen.at(1);
+    }
+    ba_resp = response.mid(3, i_responseLen - 4);
+    if(ba_resp.at(0) == '-') {
+        qm_resp.insert("msg_status", false);
+        qm_resp.insert("msg_err", zevisionErrorMsg((ZevisionErrorCode)ba_resp.at(1)));
+    }
+    qDebug() << ba_resp;
+    return qm_resp;
 }
 
 ///
