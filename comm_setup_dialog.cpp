@@ -55,7 +55,6 @@ void CommSetupDialog::on_conn_btn_clicked() {
             s_baudrate = ui->baudrate_cb->currentText();
     if(C_serial->connInst(s_port, s_baudrate)) {
         for (int i = 0; i < 4 ; i++ ) {
-//            qDebug() << C_helper->zevisonCommandGenAlpha(&S_hello, i);
             C_serial->cmdEnQueue(
                 C_helper->zevisonCommandGenAlpha(&S_hello, i)
             );

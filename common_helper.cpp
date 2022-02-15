@@ -169,7 +169,9 @@ QString CommonHelper::formatHexStr(QString hexStr) {
 int CommonHelper::infTFCCks(QByteArray bytes) {
     int sum = 0;
     foreach (char s, bytes) {
-        sum += (int)s;
+        int _i = (int)s;
+        sum += _i;
+        qDebug() << _i << s << sum;
     }
     return sum % 256;
 }
@@ -208,17 +210,19 @@ QVariantMap CommonHelper::zevisonMessageCal(const QByteArray response, int proto
     QByteArray ba_resp;
     QString s_error = "";
     int i_responseLen = response.length();
+    ba_resp = response.mid(3, i_responseLen - 4);
+    if(ba_resp.at(0) == '-') {
+        qm_resp.insert("msg_status", false);
+        qm_resp.insert("msg_err", zevisionErrorMsg((ZevisionErrorCode)ba_resp.at(1)));
+        return qm_resp;
+    }
     QByteArray ba_msgLen = response.mid(1, 2);
     int i_msgLen = 0;
     for(int i = 0; i < 2; i++) {
         i_msgLen = (int)ba_msgLen.at(0) * 255 + (int)ba_msgLen.at(1);
     }
-    ba_resp = response.mid(3, i_responseLen - 4);
-    if(ba_resp.at(0) == '-') {
-        qm_resp.insert("msg_status", false);
-        qm_resp.insert("msg_err", zevisionErrorMsg((ZevisionErrorCode)ba_resp.at(1)));
-    }
-    qDebug() << ba_resp;
+    QByteArray ba_msg = ba_resp.mid(0, i_msgLen);
+    qDebug() << ba_msg << infTFCCks(ba_msg) << ba_msg.toHex();
     return qm_resp;
 }
 

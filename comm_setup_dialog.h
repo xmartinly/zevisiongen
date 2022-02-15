@@ -24,6 +24,8 @@ public:
 
     void setCommConfig();
 
+    void readProtocol();
+
 public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
