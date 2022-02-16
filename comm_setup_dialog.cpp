@@ -17,7 +17,6 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
         int i_protocol = qm_commConfig["Protocol"].toInt();
         bool b_isLength = i_protocol % 2;
         bool b_isChksum = i_protocol > 1 ;
-//        qDebug() << b_isLength << (char)i_protocol;
         ui->chk_chkbox->setChecked(b_isChksum);
         ui->length_chkbox->setChecked(b_isLength);
     }
@@ -48,6 +47,9 @@ void CommSetupDialog::on_close_btn_clicked() {
 
 
 void CommSetupDialog::on_conn_btn_clicked() {
+//    int i_test = 1;
+//    int i_result = i_test << 1;
+//    qDebug() << i_result;
     if(C_serial->getConnectState()) {
         C_serial->disconnInst();
     }
@@ -87,7 +89,7 @@ void CommSetupDialog::on_set_btn_clicked() {
     if(!C_serial->getConnectState()) {
         QString s_port = ui->port_cb->currentText(),
                 s_baudrate = ui->baudrate_cb->currentText();
-        int i_protocol = ui->chk_chkbox->checkState() //If checked will return 2
+        int i_protocol = ((int)ui->chk_chkbox->isChecked() << 1) //additive
                          + (int)ui->length_chkbox->isChecked();
         if(C_serial->connInst(s_port, s_baudrate)) {
             C_serial->cmdEnQueue(

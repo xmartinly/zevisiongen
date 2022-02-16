@@ -14,7 +14,7 @@ class CommonHelper : public QObject {
     Q_OBJECT
 //    Q_ENUMS(ZevisionPortocol)
 //    Q_ENUMS(ControllerType)
-public:
+  public:
     CommonHelper(QObject *parent = 0);
 
 
@@ -41,6 +41,7 @@ public:
     /// 0011: checksum and length.
     ///
     enum ZevisionPortocol {
+        ZevisionDefault = 0, ///< Command without length and checksum.
         ZevisionLenght = 1, ///< Command with length only.
         ZevisionChecksum = 2, ///< Command with checksum only.
         ZevisionOptional = 3 ///< Command with length and checksum.
@@ -108,6 +109,8 @@ public:
     QVariantMap zevisonMessageCal(const QByteArray response, int protocol);
 
     QString zevisionErrorMsg(ZevisionErrorCode) const;
+
+    QVariantMap zevisionMsgSplit(const QString msg) const;
 
 
     QMap<QString, QStringList> readData(const QString *fileName);
