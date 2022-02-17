@@ -53,12 +53,13 @@ void CommSetupDialog::on_conn_btn_clicked() {
     if(C_serial->getConnectState()) {
         C_serial->disconnInst();
     }
+    QString s_protocolConfig = QString("QG1304;QG1305;H1");
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText();
     if(C_serial->connInst(s_port, s_baudrate)) {
         for (int i = 0; i < 4 ; i++ ) {
             C_serial->cmdEnQueue(
-                C_helper->zevisonCommandGenAlpha(&S_hello, i)
+                C_helper->zevisonCommandGenAlpha(&s_protocolConfig, i)
             );
         }
     }
@@ -74,12 +75,18 @@ void CommSetupDialog::closeEvent(QCloseEvent *event) {
 void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
     QByteArray ba_response = qm_resp["data"].toByteArray();
     QVariantMap qvm_response = C_helper->zevisonMessageCal(ba_response, CommonHelper::ZevisionOptional);
-    qDebug() << qvm_response << qm_resp["cmd"].toByteArray().right(1);
+//    foreach (auto variant, qvm_response) {
+//        qDebug() << variant;
+//    }
+    bool b_msgStatusSuccess = qvm_response["msg_status"].toBool();
+    if(b_msgStatusSuccess) {
+//        I_zevisionProtocol = qm_resp["cmd"].toByteArray().right(1)
+        qDebug() << qvm_response << qm_resp["cmd"].toByteArray().right(1);
+    }
 }
 
 void CommSetupDialog::on_set_btn_clicked() {
     QString s_protocolConfig = QString("UG1305:%1;UG1304:%2").arg((int)ui->length_chkbox->isChecked()).arg((int)ui->chk_chkbox->isChecked());
-//    qDebug() << s_protocolConfig;
     if(!C_serial->getConnectState()) {
         C_helper->normalErr(1, "Connection", "Connect instrument first.");
         return;

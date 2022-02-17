@@ -117,7 +117,7 @@ public:
 
     QString zevisionErrorMsg(ZevisionErrorCode) const;
 
-    QVariantMap zevisionMsgSplit(const QStringList msg_list);
+    QVariantMap zevisionMsgSplit(const QByteArray msg);
 
 
     QMap<QString, QStringList> readData(const QString *fileName);
