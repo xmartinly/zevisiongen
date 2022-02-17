@@ -9,12 +9,13 @@
 #include <QDir>
 #include <QDebug>
 #include <QSettings>
+#include <math.h>
 
 class CommonHelper : public QObject {
     Q_OBJECT
 //    Q_ENUMS(ZevisionPortocol)
 //    Q_ENUMS(ControllerType)
-  public:
+public:
     CommonHelper(QObject *parent = 0);
 
 
@@ -42,7 +43,7 @@ class CommonHelper : public QObject {
     ///
     enum ZevisionPortocol {
         ZevisionDefault = 0, ///< Command without length and checksum.
-        ZevisionLenght = 1, ///< Command with length only.
+        ZevisionLength = 1, ///< Command with length only.
         ZevisionChecksum = 2, ///< Command with checksum only.
         ZevisionOptional = 3 ///< Command with length and checksum.
     };
@@ -86,6 +87,10 @@ class CommonHelper : public QObject {
     };
     static int infTFCCks(QByteArray bytes);
 
+    inline QByteArray msgLengthCal(const QByteArray msg);
+
+    inline int lengthBytesCal(const QByteArray length);
+
     inline static int hexStrToInt( QString hex_str);
 
     inline static float byteArrayToFloat(QByteArray data);
@@ -97,6 +102,8 @@ class CommonHelper : public QObject {
     inline static QByteArray reviseData(QByteArray Bytes);
 
     inline static QString formatHexStr(QString hexStr);
+
+    static QString formatHexStr(const QByteArray msg);
 
     QByteArray strToByteArray(const QString *s_cmd);
 
@@ -110,7 +117,7 @@ class CommonHelper : public QObject {
 
     QString zevisionErrorMsg(ZevisionErrorCode) const;
 
-    QVariantMap zevisionMsgSplit(const QString msg) const;
+    QVariantMap zevisionMsgSplit(const QStringList msg_list);
 
 
     QMap<QString, QStringList> readData(const QString *fileName);

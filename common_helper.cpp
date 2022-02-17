@@ -8,12 +8,13 @@ QString CommonHelper::zevisionErrorMsg(ZevisionErrorCode code) const {
     return QM_errorMsg[code];
 }
 
-QVariantMap CommonHelper::zevisionMsgSplit(const QString msg) {
+QVariantMap CommonHelper::zevisionMsgSplit(const QStringList msg_list) {
     QVariantMap qm_msgList;
-    QStringList sl_data = QString(msg).split(";");
-    foreach (QString s, sl_data) {
+    int i_cmdSq = 1;
+    foreach (QString s, msg_list) {
         QStringList _sl = s.split(":");
         qm_msgList.insert(_sl.at(0), _sl.at(1));
+        i_cmdSq++;
     }
     return qm_msgList;
 }
@@ -170,6 +171,16 @@ QString CommonHelper::formatHexStr(QString hexStr) {
     return hexStr.indexOf("0") == 0 ? hexStr.mid(1, 1) : hexStr;
 }
 
+QString CommonHelper::formatHexStr(const QByteArray msg) {
+    QString s_hexMsg = msg.toHex();
+    int i_msgLength = msg.length();
+    QString s_msg;
+    for (int i = 0; i < i_msgLength; i++) {
+        s_msg.append(s_hexMsg.mid(i * 2, 2) + " ");
+    }
+    return s_msg.trimmed().toUpper();
+}
+
 
 ///
 /// \brief CommonHelper::infTFCCks. Calculate data checksum.
@@ -183,6 +194,23 @@ int CommonHelper::infTFCCks(QByteArray bytes) {
         sum += _i;
     }
     return sum % 256;
+}
+
+QByteArray CommonHelper::msgLengthCal(const QByteArray msg) {
+    QByteArray ba_length;
+    int i_totalLength = msg.length();
+    int i_highByte = floor(i_totalLength / 256);
+    int i_lowByte = i_totalLength % 256;
+    ba_length.append(i_highByte);
+    ba_length.append(i_lowByte);
+    return ba_length;
+}
+
+int CommonHelper::lengthBytesCal(const QByteArray length) {
+    if(length.length() != 2) {
+        return -1;
+    }
+    return (int)length.at(0) * 256 + (int)length.at(1);
 }
 
 ///
@@ -201,7 +229,7 @@ QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cm
         }
         ba_cmd.append((int)(i_sum % 256));
     }
-    if(protocol == ZevisionLenght || protocol == ZevisionOptional) { //calculate cmd length
+    if(protocol == ZevisionLength || protocol == ZevisionOptional) { //calculate cmd length
         int i_cmdLen = cmd->length();
         ba_cmd.prepend((char)i_cmdLen);
         if(i_cmdLen < 255) {
@@ -211,35 +239,52 @@ QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cm
     ba_cmd.prepend('{');
     ba_cmd.append('}');
     qm_cmd.insert("cmd_treated", ba_cmd);
+//    qm_cmd.insert("cmd_protocol", (char)protocol);
     return qm_cmd;
 }
 
 QVariantMap CommonHelper::zevisonMessageCal(const QByteArray response, int protocol) {
     QVariantMap qm_resp;
     QByteArray ba_resp;
-    int i_responseLen = response.length();
-    ba_resp = response.mid(1, i_responseLen - 2);
-    int i_respStatusCharPos = ba_resp.indexOf('-');
-    if(i_respStatusCharPos != -1) {
+    int i_responseLen = response.length();  //response length
+    int i_respStatusCharNegPos = response.indexOf('-'); //find negative char
+    int i_respStatusCharPosPos = response.indexOf('+'); //find postive char
+    int i_dataStartOffset = 1; //initialize data string beging offset
+//    int i_dataEndOffset = 1; //initialize data string stop offset
+    int i_msgLength = i_responseLen - 2; //initialize reponse message length, minus 2 to drop '{' and '}'
+    bool b_msgStatusFound = i_respStatusCharNegPos != -1; //negative char found
+    qm_resp["msg_status"] = i_respStatusCharNegPos == -1;
+//    qDebug() << i_responseLen << i_respStatusCharNegPos << i_respStatusCharPosPos << i_dataStartOffset << i_dataEndOffset;
+    if(b_msgStatusFound) { // negative char found
+        char c_error = response.at(i_respStatusCharNegPos + 1);
         qm_resp.insert("msg_status", false);
-        qm_resp.insert("msg_err", zevisionErrorMsg((ZevisionErrorCode)ba_resp.at(i_respStatusCharPos + 1)));
+        qm_resp.insert("msg_err_char", c_error);
+        qm_resp.insert("msg_err", zevisionErrorMsg((ZevisionErrorCode)c_error));
         return qm_resp;
     }
-    if(protocol == ZevisionDefault) {
-        qm_resp.unite(zevisionMsgSplit(QString(ba_resp)));
-        return qm_resp;
-    }
-    int i_msgLen = 0, i_dataOffset = 0;
-    if(protocol == ZevisionLenght || protocol == ZevisionOptional) {
-        i_dataOffset = 2;
-        QByteArray ba_msgLen = response.mid(1, 2);
-        for(int i = 0; i < 2; i++) {
-            i_msgLen = (int)ba_msgLen.at(0) * 255 + (int)ba_msgLen.at(1);
-        }
+//    if(protocol == ZevisionDefault) {
+//        ba_resp = response.mid(i_dataStartOffset, i_responseLen - i_dataEndOffset);
+//        QStringList sl_resp = QString(ba_resp).split(";");
+//        qm_resp.unite(zevisionMsgSplit(sl_resp));
+//        return qm_resp;
+//    }
+    if(protocol == ZevisionLength || protocol == ZevisionOptional) {
+        i_dataStartOffset += 2; //add 2 to start position to skip length bytes
+        i_msgLength -= 2; //minus 2, message length bytes
+        QByteArray ba_length = response.mid(1, 2);
+        qm_resp.insert("msg_length", lengthBytesCal(ba_length));
+        qm_resp.insert("msg_length_bytes", ba_length.toHex());
     }
     if(protocol == ZevisionChecksum || protocol == ZevisionOptional) {
-        QByteArray ba_msg = ba_resp.mid(i_dataOffset, i_responseLen - 5);
+        i_msgLength -= 1; //minus 1, checksum bytes
+//        i_dataEndOffset += 2; //add 2 to end offset to skip '+' and checksum byte
+        char c_chksum = response.at(i_respStatusCharPosPos + 1);
+        qm_resp.insert("checksum_byte", c_chksum & 0xFF);
+        qm_resp.insert("checksum", infTFCCks(response.mid(i_dataStartOffset, i_msgLength)) == (int)(c_chksum & 0xFF));
     }
+    ba_resp = response.mid(i_dataStartOffset, i_msgLength - 1); //minus 1 byte to skip status char
+    QStringList sl_resp = QString(ba_resp).split(";");
+    qm_resp.unite(zevisionMsgSplit(sl_resp));
     return qm_resp;
 }
 
