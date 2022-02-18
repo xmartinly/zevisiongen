@@ -48,22 +48,19 @@ void ZevisionGen::on_send_btn_clicked() {
     S_command = ui->cmd_le->text().toUpper();
     bool B_isCmdEmpty = S_command.length() == 0;
     bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
-    if(B_isCmdEmpty ) {
+    if(B_isCmdEmpty) {
         C_helper->normalErr(1,
                             tr("Command error"),
                             tr("Command can not be empty.")
                            );
-        if(b_isAcquireTimerActive) {
-            QT_acquireTimer->stop();
-        }
-        return;
-    }
-    if(b_isAcquireTimerActive) {
-        QT_acquireTimer->stop();
         return;
     }
     ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
     ui->cmd_le->setEnabled(b_isAcquireTimerActive);
+    if(b_isAcquireTimerActive) {
+        QT_acquireTimer->stop();
+        return;
+    }
     QT_acquireTimer->start(I_collectIntvl);
 }
 
@@ -220,6 +217,7 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
     QSL_dataToSave.append(C_helper->bytearrayToString(ba_resp));
     QSL_dataToSave.append(ba_resp.toHex() + "\n");
     if(B_isSaveData && QT_acquireTimer->isActive()) {
+        qDebug() << "123";
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
@@ -269,9 +267,13 @@ void ZevisionGen::initializeTbl() {
 void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl) {
     int i_slLength = sl_data.length();
     if(i_slLength > 9) {
-        on_send_btn_clicked();
         if(D_commSet->isActiveWindow()) {
             return;
+        }
+        if(QT_acquireTimer->isActive()) {
+            QT_acquireTimer->stop();
+            ui->send_btn->setText(tr("Start"));
+            ui->cmd_le->setEnabled(true);
         }
         C_helper->normalErr(
             1,
