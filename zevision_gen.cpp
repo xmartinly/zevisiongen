@@ -11,7 +11,6 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     L_statStr->setAlignment(Qt::AlignRight);
     statusBar()->setSizeGripEnabled(false);
     statusBar()->addPermanentWidget(L_statStr, 1);
-//    ui->splitter->setSizes({{9, 1}});
     QT_statTimer = new QTimer( this );
     connect( QT_statTimer, SIGNAL(timeout()), this, SLOT(onInstConnectState()));
     onReadCommConfig();
@@ -99,7 +98,5 @@ void ZevisionGen::onReadCommConfig() {
 
 
 void ZevisionGen::on_send_btn_clicked() {
-//    ZevisionInst *inst = new ZevisionInst;
-//    inst->CommandGen(3, "she is a girl", "she is so beatiful", "but i don't know her name..");
 }
 

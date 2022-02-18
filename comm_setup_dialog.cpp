@@ -15,10 +15,7 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
         ui->baudrate_cb->setCurrentText(qm_commConfig["Baudrate"]);
         ui->port_cb->setCurrentText(qm_commConfig["Port"]);
         int i_protocol = qm_commConfig["Protocol"].toInt();
-        bool b_isLength = i_protocol % 2;
-        bool b_isChksum = i_protocol > 1 ;
-        ui->chk_chkbox->setChecked(b_isChksum);
-        ui->length_chkbox->setChecked(b_isLength);
+        setProtocol(i_protocol);
     }
 }
 
@@ -30,14 +27,28 @@ void CommSetupDialog::setCommConfig() {
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText(),
             s_fileName = "zevision.ini",
-            s_section =  "Communication";
+            s_section =  "Communication",
+            s_protocol = QString::number(getProtocol());
     QMap<QString, QString> qm_commSetup;
-    int i_protocol = ui->chk_chkbox->checkState() //If checked will return 2
-                     + (int)ui->length_chkbox->isChecked();
     qm_commSetup.insert("Port", s_port);
     qm_commSetup.insert("Baudrate", s_baudrate);
-    qm_commSetup.insert("Protocol", QString::number(i_protocol));
+    qm_commSetup.insert("Protocol", s_protocol);
     C_helper->writeSettings(s_fileName, s_section, qm_commSetup);
+}
+
+void CommSetupDialog::setProtocol(const int protocol) {
+    I_zevisionProtocol = protocol;
+    qDebug() << C_helper->zevisionProtocolCal(protocol);
+    bool b_isLength = protocol % 2;
+    bool b_isChksum = protocol > 1 ;
+    ui->chk_chkbox->setChecked(b_isChksum);
+    ui->length_chkbox->setChecked(b_isLength);
+    //comm_setup_dialog.cpp:43:22: warning: overlapping comparisons always evaluate to true
+}
+
+int CommSetupDialog::getProtocol() {
+    return ui->chk_chkbox->checkState() //If checked will return 2
+           + (int)ui->length_chkbox->isChecked();
 }
 
 void CommSetupDialog::on_close_btn_clicked() {
@@ -47,9 +58,6 @@ void CommSetupDialog::on_close_btn_clicked() {
 
 
 void CommSetupDialog::on_conn_btn_clicked() {
-//    int i_test = 1;
-//    int i_result = i_test << 1;
-//    qDebug() << i_result;
     if(C_serial->getConnectState()) {
         C_serial->disconnInst();
     }
@@ -73,28 +81,35 @@ void CommSetupDialog::closeEvent(QCloseEvent *event) {
 }
 
 void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
+    QStringList sl_cmd = QString(qm_resp["cmd"].toString()).split("&#");
+    setProtocol(I_zevisionProtocol);
     QByteArray ba_response = qm_resp["data"].toByteArray();
-    QVariantMap qvm_response = C_helper->zevisonMessageCal(ba_response, CommonHelper::ZevisionOptional);
-//    foreach (auto variant, qvm_response) {
-//        qDebug() << variant;
-//    }
-    bool b_msgStatusSuccess = qvm_response["msg_status"].toBool();
-    if(b_msgStatusSuccess) {
-//        I_zevisionProtocol = qm_resp["cmd"].toByteArray().right(1)
-        qDebug() << qvm_response << qm_resp["cmd"].toByteArray().right(1);
+    QVariantMap qvm_response = C_helper->zevisonMessageCal(
+                                   ba_response,
+                                   sl_cmd.at(1).toInt()
+                               );
+    bool b_isMsgFailed = qvm_response["msg_failed"].toBool();
+    if(b_isMsgFailed) {
+        return;
+    } else {
+        I_zevisionProtocol = sl_cmd.at(1).toInt();
+        setProtocol(I_zevisionProtocol);
     }
+    QMap _resp = qvm_response["resp"].toMap();
+    QMap __resp = _resp["H1"].toMap();
+    ui->resp_lb->setText(__resp["resp_data"].toString());
 }
 
 void CommSetupDialog::on_set_btn_clicked() {
-    QString s_protocolConfig = QString("UG1305:%1;UG1304:%2").arg((int)ui->length_chkbox->isChecked()).arg((int)ui->chk_chkbox->isChecked());
+    QString s_protocolConfig = QString("UG1305:%1;UG1304:%2")
+                               .arg((int)ui->length_chkbox->isChecked())
+                               .arg((int)ui->chk_chkbox->isChecked());
     if(!C_serial->getConnectState()) {
         C_helper->normalErr(1, "Connection", "Connect instrument first.");
         return;
     }
-    for (int i = 0; i < 4 ; i++ ) {
-        C_serial->cmdEnQueue(
-            C_helper->zevisonCommandGenAlpha(&s_protocolConfig, i)
-        );
-    }
+    C_serial->cmdEnQueue(
+        C_helper->zevisonCommandGenAlpha(&s_protocolConfig, I_zevisionProtocol)
+    );
 }
 

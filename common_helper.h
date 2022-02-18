@@ -119,6 +119,8 @@ public:
 
     QVariantMap zevisionMsgSplit(const QByteArray msg);
 
+    inline QList<int> zevisionProtocolCal(const int protocol);
+
 
     QMap<QString, QStringList> readData(const QString *fileName);
 

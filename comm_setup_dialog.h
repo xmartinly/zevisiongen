@@ -20,11 +20,15 @@ public:
 
     const QString S_hello = "H1";
 
-    int I_zevisionProtocol = 3;
+    int I_zevisionProtocol = -1;
 
     void setCommConfig();
 
     void readProtocol();
+
+    void setProtocol(const int protocol);
+
+    int getProtocol();
 
 public slots:
 
