@@ -10,11 +10,13 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QSettings>
+#include <QDesktopServices>
+#include <QUrl>
 #include <math.h>
 
 class CommonHelper : public QObject {
     Q_OBJECT
-public:
+  public:
     CommonHelper(QObject *parent = 0);
 
     enum CommandType {
@@ -118,6 +120,8 @@ public:
     QString hexToBinary(const QString Hex);
 
     QString bytearrayToString(const QByteArray data);
+
+    void openFile(const QString file);
 
 
 

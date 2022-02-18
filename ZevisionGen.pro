@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    about_dialog.cpp \
     comm_setup_dialog.cpp \
     common_helper.cpp \
     data_log_dialog.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     zevision_gen.cpp
 
 HEADERS += \
+    about_dialog.h \
     comm_setup_dialog.h \
     common_helper.h \
     data_log_dialog.h \
@@ -28,6 +30,7 @@ HEADERS += \
     zevision_gen.h
 
 FORMS += \
+    about_dialog.ui \
     comm_setup_dialog.ui \
     data_log_dialog.ui \
     zevision_gen.ui

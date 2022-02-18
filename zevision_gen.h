@@ -13,6 +13,7 @@
 #include "serial_comm_singleton.h"
 #include "comm_setup_dialog.h"
 #include "data_log_dialog.h"
+#include "about_dialog.h"
 //#include "inficon_inst.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +25,7 @@ QT_END_NAMESPACE
 class ZevisionGen : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     ZevisionGen(QWidget *parent = nullptr);
     ~ZevisionGen();
 
@@ -126,9 +127,9 @@ public:
     /// \param sl_data
     /// \param tbl
     ///
-    void setTblData(const QStringList sl_data, const QTableWidget* tbl);
+    void setTblData(const QStringList sl_data, const QTableWidget *tbl);
 
-public slots:
+  public slots:
 
     ///
     /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
@@ -151,7 +152,7 @@ public slots:
     void onSendCommand();
 
 
-private slots:
+  private slots:
     void on_actionDataLogSetting_triggered();
 
     void on_actionExit_triggered();
@@ -166,7 +167,7 @@ private slots:
 
     void on_actionToggle_CHS_ENG_triggered();
 
-private:
+  private:
     Ui::ZevisionGen *ui;
 
     ///
@@ -183,6 +184,8 @@ private:
     /// \brief D_commSet. CommSetupDialog pointer.
     ///
     CommSetupDialog *D_commSet;
+
+    AboutDialog *D_about;
 
     ///
     /// \brief D_dataLog. DataLogDialog pointer.
@@ -204,6 +207,9 @@ private:
     ///
     QLabel *L_statStr = nullptr;
 
+    ///
+    /// \brief m_translator
+    ///
     QTranslator *m_translator;
 
 };

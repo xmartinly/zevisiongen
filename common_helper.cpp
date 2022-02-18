@@ -548,6 +548,14 @@ QString CommonHelper::bytearrayToString(const QByteArray data) {
 }
 
 ///
+/// \brief CommonHelper::openFile
+/// \param file
+///
+void CommonHelper::openFile(const QString file) {
+    QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+}
+
+///
 /// \brief byteArrayToFloat. Calculate byte array data to float value.
 /// \param QByteArray data
 /// \return float

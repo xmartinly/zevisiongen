@@ -109,12 +109,15 @@ void ZevisionGen::on_actionCommSettings_triggered() {
 /// \brief ZevisionGen::on_actionHelp_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionHelp_triggered() {
+    D_about = new AboutDialog;
+    D_about->exec();
 }
 
 ///
 /// \brief ZevisionGen::on_actionDocument_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionDocument_triggered() {
+    C_helper->openFile("./074-785-P1A IMC-300 Remote Communication Quick Start Guide PRELIMINARY 020822.pdf");
 }
 
 ///
