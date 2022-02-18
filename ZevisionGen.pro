@@ -30,7 +30,9 @@ FORMS += \
     zevision_gen.ui
 
 TRANSLATIONS += \
-    ZevisionGen_zh_CN.ts
+    ZevisionGen_zh_CN.ts \
+    ZevisionGen_en_US.ts
+
 CONFIG += lrelease
 CONFIG += embed_translations
 

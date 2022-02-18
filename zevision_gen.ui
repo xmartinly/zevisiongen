@@ -103,7 +103,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QLabel" name="label_4">
@@ -131,7 +131,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label_5">
@@ -185,7 +185,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionCommSettings"/>
-    <addaction name="actionToggle_ENG_CHS"/>
+    <addaction name="actionToggle_CHS_ENG"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -227,6 +227,11 @@
   <action name="actionDocument">
    <property name="text">
     <string>Document</string>
+   </property>
+  </action>
+  <action name="actionToggle_CHS_ENG">
+   <property name="text">
+    <string>Toggle CHS/ENG</string>
    </property>
   </action>
  </widget>

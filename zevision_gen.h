@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QTimer>
+#include <QLocale>
+#include <QTranslator>
 
 #include "qcustomplot.h"
 #include "common_helper.h"
@@ -60,20 +62,22 @@ public:
     ///
     bool B_isInstConnected = false;
 
+    bool B_isUsingTrans = false;
+
     ///Communication configs. Include port, baudrate, protocol
     QMap<QString, QString> QM_commConfig;
 
     ///Fixed table headers.
     QStringList QSL_tableHead = {
-        "Time",
-        "Start Char",
-        "Msg Length",
-        "Data",
-        "Checksum",
-        "Stop Char",
-        "Protocol",
-        "Hex",
-        "String"
+        tr("Time"),
+        tr("Start Char"),
+        tr("Msg Length"),
+        tr("Data"),
+        tr("Checksum"),
+        tr("Stop Char"),
+        tr("Protocol"),
+        tr("Hex"),
+        tr("String")
     };
 
     ///
@@ -89,7 +93,6 @@ public:
     void setTblData(const QStringList sl_data, const QTableWidget* tbl);
 
 public slots:
-
 
     ///
     /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
@@ -111,6 +114,7 @@ public slots:
     ///
     void onSendCommand();
 
+
 private slots:
     void on_actionDataLogSetting_triggered();
 
@@ -118,14 +122,13 @@ private slots:
 
     void on_actionCommSettings_triggered();
 
-    void on_actionToggle_ENG_CHS_triggered();
-
     void on_actionHelp_triggered();
 
     void on_actionDocument_triggered();
 
     void on_send_btn_clicked();
 
+    void on_actionToggle_CHS_ENG_triggered();
 
 private:
     Ui::ZevisionGen *ui;
@@ -159,6 +162,8 @@ private:
     /// \brief L_statStr. Lable for status bar.
     ///
     QLabel *L_statStr = nullptr;
+
+    QTranslator *m_translator;
 
 };
 #endif // ZEVISIONGEN_H

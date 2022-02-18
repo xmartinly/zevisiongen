@@ -17,11 +17,26 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     connect( QT_acquireTimer, SIGNAL(timeout()), this, SLOT(onSendCommand()));
     onReadCommConfig();
     initializeTbl();
+    m_translator = new QTranslator(qApp);
 }
 
 ZevisionGen::~ZevisionGen() {
     delete ui;
 }
+
+///
+/// \brief ZevisionGen::on_actionToggle_CHS_ENG_triggered
+///
+void ZevisionGen::on_actionToggle_CHS_ENG_triggered() {
+    B_isUsingTrans = !B_isUsingTrans;
+    QString s_transFileName;
+    s_transFileName = B_isUsingTrans ? "ZevisionGen_zh_CN.qm" :  "ZevisionGen_en_US.qm";
+    if(m_translator->load(":/i18n/" + s_transFileName)) {
+        qApp->installTranslator(m_translator);
+        ui->retranslateUi(this);
+    }
+}
+
 
 ///
 /// \brief ZevisionGen::on_send_btn_clicked. SYSTEM private SLOT.
@@ -30,7 +45,7 @@ void ZevisionGen::on_send_btn_clicked() {
     onReadCommConfig();
     S_command = ui->cmd_le->text().toUpper();
     bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
-    ui->send_btn->setText(b_isAcquireTimerActive ? "Start" : "Stop");
+    ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
     ui->cmd_le->setEnabled(b_isAcquireTimerActive);
     if(b_isAcquireTimerActive) {
         QT_acquireTimer->stop();
@@ -60,11 +75,20 @@ void ZevisionGen::on_actionCommSettings_triggered() {
     D_commSet->exec();
 }
 
-///
-/// \brief ZevisionGen::on_actionToggle_ENG_CHS_triggered. SYSTEM private SLOT.
-///
-void ZevisionGen::on_actionToggle_ENG_CHS_triggered() {
-}
+/////
+///// \brief ZevisionGen::on_actionToggle_ENG_CHS_triggered. SYSTEM private SLOT.
+/////
+/// deprecated
+//void ZevisionGen::on_actionToggle_ENG_CHS_triggered() {
+//    B_isUsingTrans = !B_isUsingTrans;
+//    QTranslator translator;
+//    if(B_isUsingTrans && translator.load(":/i18n/ZevisionGen_zh_CN.qm")) {
+//        qApp->installTranslator(&translator);
+//    } else {
+//        qApp->removeTranslator(&translator);
+//    }
+//    ui->retranslateUi(this);
+//}
 
 ///
 /// \brief ZevisionGen::on_actionHelp_triggered. SYSTEM private SLOT.
@@ -98,8 +122,8 @@ void ZevisionGen::onInstConnectState() {
     }
     if(QM_commConfig.count() != 3) {
         C_helper->normalErr(1,
-                            "Comm Config Error",
-                            "No communication config found."
+                            tr("Comm Config Error"),
+                            tr("No communication config found.")
                            );
         if(QT_statTimer->isActive()) {
             QT_statTimer->stop();
@@ -108,8 +132,8 @@ void ZevisionGen::onInstConnectState() {
     }
     if(I_connectInstTryCount > 10) {
         C_helper->normalErr(1,
-                            "Communication Error",
-                            "Can't open port."
+                            tr("Communication Error"),
+                            tr("Can't open port.")
                            );
         if(QT_statTimer->isActive()) {
             QT_statTimer->stop();
@@ -215,7 +239,7 @@ void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl)
         }
         C_helper->normalErr(
             1,
-            "Message error",
+            tr("Message error"),
             sl_data.last()
         );
         return;
@@ -224,3 +248,6 @@ void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl)
         tbl->item(i, 1)->setText(sl_data.at(i));
     }
 }
+
+
+

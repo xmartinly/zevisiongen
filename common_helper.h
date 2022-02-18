@@ -49,7 +49,7 @@ public:
     ///
     /// \brief The ZevisionAction enum.
     ///
-    /* abandon
+    /* deprecated
     //    enum ZevisionAction {
     //        Update,
     //        Query,
@@ -71,7 +71,7 @@ public:
     /// Success: +
     /// Fail: -
     ///
-    /* abandon
+    /* deprecated
     //    enum ZevisionErrorCode {
     //        A = 0x41,
     //        B = 0x42,
