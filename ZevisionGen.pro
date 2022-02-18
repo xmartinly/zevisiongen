@@ -47,4 +47,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Resource.qrc
 
-RC_ICONS = inficon.ico
+RC_ICONS = tuning_fork.ico
