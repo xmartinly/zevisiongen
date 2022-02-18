@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QMessageBox>
-#include <QDebug>
 #include <QTimer>
 
 #include "qcustomplot.h"
@@ -26,18 +25,45 @@ public:
     ZevisionGen(QWidget *parent = nullptr);
     ~ZevisionGen();
 
+    ///
+    /// \brief S_version. Version string shown at status bar.
+    ///
     QString S_version = " | Zevision Command Gen. beta 0.0.1";
+
+    ///
+    /// \brief S_port. Default com port string.
+    ///
     QString S_port = "COM1";
+
+    ///
+    /// \brief S_baudrate. Default comm baudrate string.
+    ///
     QString S_baudrate = "115200";
+
+    ///
+    /// \brief S_command. Command string from the cmd_le.
+    ///
     QString S_command = "";
 
+    ///
+    /// \brief I_connectInstTryCount. Connection tries count. Will stop QT_statTimer when increase to 10.
+    ///
+    int I_connectInstTryCount = 0;
 
-    int I_connectInstTryCount = 0,
-        I_zevisionProtocol = 0;
+    ///
+    /// \brief I_zevisionProtocol
+    ///
+    int I_zevisionProtocol = 0;
+
+    ///
+    /// \brief B_isInstConnected
+    ///
     bool B_isInstConnected = false;
 
+    ///Communication configs. Include port, baudrate, protocol
     QMap<QString, QString> QM_commConfig;
 
+    ///Fixed table headers.
     QStringList QSL_tableHead = {
         "Time",
         "Start Char",
@@ -50,20 +76,39 @@ public:
         "String"
     };
 
-
+    ///
+    /// \brief initializeTbl
+    ///
     void initializeTbl();
 
+    ///
+    /// \brief setTblData
+    /// \param sl_data
+    /// \param tbl
+    ///
     void setTblData(const QStringList sl_data, const QTableWidget* tbl);
-
 
 public slots:
 
+
+    ///
+    /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
+    ///
     void onRecvResponse(QVariantMap);
 
+    ///
+    /// \brief onInstConnectState
+    ///
     void onInstConnectState();
 
+    ///
+    /// \brief onReadCommConfig
+    ///
     void onReadCommConfig();
 
+    ///
+    /// \brief onSendCommand
+    ///
     void onSendCommand();
 
 private slots:
@@ -85,13 +130,34 @@ private slots:
 private:
     Ui::ZevisionGen *ui;
 
+    ///
+    /// \brief C_helper. CommonHelper pointer.
+    ///
     CommonHelper *C_helper;
+
+    ///
+    /// \brief C_serial. SerialCommSingleton pointer.
+    ///
     SerialCommSingleton *C_serial;
 
+    ///
+    /// \brief D_commSet. CommSetupDialog pointer.
+    ///
     CommSetupDialog *D_commSet;
 
-    QTimer *QT_statTimer, *QT_acquireTimer;
+    ///
+    /// \brief QT_statTimer.
+    ///
+    QTimer *QT_statTimer;
 
+    ///
+    /// \brief QT_acquireTimer
+    ///
+    QTimer *QT_acquireTimer;
+
+    ///
+    /// \brief L_statStr. Lable for status bar.
+    ///
     QLabel *L_statStr = nullptr;
 
 };

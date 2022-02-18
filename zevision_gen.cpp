@@ -23,77 +23,65 @@ ZevisionGen::~ZevisionGen() {
     delete ui;
 }
 
-void ZevisionGen::initializeTbl() {
-    ui->msg_tb->clear();
-    ui->msg_tb->setColumnCount(2);
-    ui->resp_tb->clear();
-    ui->resp_tb->setColumnCount(2);
-    QStringList tblHeader;
-    tblHeader << tr("Item") << tr("Value");
-    ui->msg_tb->setHorizontalHeaderLabels(tblHeader);
-    ui->msg_tb->verticalHeader()->setVisible(false);
-    ui->msg_tb->horizontalHeader()->resizeSection(0, 90);
-    ui->msg_tb->horizontalHeader()->resizeSection(1, 85);
-    ui->msg_tb->horizontalHeader()->setStretchLastSection(true);
-    ui->msg_tb->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->msg_tb->setRowCount(9);
-    ui->resp_tb->setHorizontalHeaderLabels(tblHeader);
-    ui->resp_tb->verticalHeader()->setVisible(false);
-    ui->resp_tb->horizontalHeader()->resizeSection(0, 90);
-    ui->resp_tb->horizontalHeader()->resizeSection(1, 85);
-    ui->resp_tb->horizontalHeader()->setStretchLastSection(true);
-    ui->resp_tb->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->resp_tb->setRowCount(9);
-    for(int i = 0; i < 9; i++) {
-        QString s_head = QSL_tableHead.at(i);
-        ui->msg_tb->setItem(i, 0, new QTableWidgetItem(s_head));
-        ui->resp_tb->setItem(i, 0, new QTableWidgetItem(s_head));
-        ui->msg_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
-        ui->resp_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
-    }
-//    ui->msg_tb->setItem(1, 1, new QTableWidgetItem("{"));
-//    ui->msg_tb->setItem(2, 7, new QTableWidgetItem("}"));
-//    ui->resp_tb->setItem(1, 1, new QTableWidgetItem("{"));
-    //    ui->resp_tb->setItem(2, 7, new QTableWidgetItem("}"));
-}
-
-void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl) {
-    int i_slLength = sl_data.length();
-    if(i_slLength != 9) {
+///
+/// \brief ZevisionGen::on_send_btn_clicked. SYSTEM private SLOT.
+///
+void ZevisionGen::on_send_btn_clicked() {
+    onReadCommConfig();
+    S_command = ui->cmd_le->text().toUpper();
+    bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
+    ui->send_btn->setText(b_isAcquireTimerActive ? "Start" : "Stop");
+    ui->cmd_le->setEnabled(b_isAcquireTimerActive);
+    if(b_isAcquireTimerActive) {
+        QT_acquireTimer->stop();
         return;
     }
-    for (int i = 0; i < i_slLength ; i++ ) {
-        tbl->item(i, 1)->setText(sl_data.at(i));
-    }
+    QT_acquireTimer->start(1000);
 }
 
-
+///
+/// \brief ZevisionGen::on_actionDataLogSetting_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionDataLogSetting_triggered() {
 }
 
-
+///
+/// \brief ZevisionGen::on_actionExit_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionExit_triggered() {
 }
 
-
+///
+/// \brief ZevisionGen::on_actionCommSettings_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionCommSettings_triggered() {
     D_commSet = new CommSetupDialog;
     connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadCommConfig);
     D_commSet->exec();
 }
 
-
+///
+/// \brief ZevisionGen::on_actionToggle_ENG_CHS_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionToggle_ENG_CHS_triggered() {
 }
 
-
+///
+/// \brief ZevisionGen::on_actionHelp_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionHelp_triggered() {
 }
 
-
+///
+/// \brief ZevisionGen::on_actionDocument_triggered. SYSTEM private SLOT.
+///
 void ZevisionGen::on_actionDocument_triggered() {
 }
 
+///
+/// \brief ZevisionGen::onInstConnectState. Custom private SLOT.
+/// Connect instrument. QT_statTimer connected.
+///
 void ZevisionGen::onInstConnectState() {
     B_isInstConnected = C_serial->getConnectState();
     L_statStr->setText((B_isInstConnected ? "Port open." : "Port close.") + S_version);
@@ -126,12 +114,15 @@ void ZevisionGen::onInstConnectState() {
         if(QT_statTimer->isActive()) {
             QT_statTimer->stop();
         }
-//        D_commSet->exec();
         return;
     }
     I_connectInstTryCount++;
 }
 
+///
+/// \brief ZevisionGen::onReadCommConfig. Custom public SLOT.
+/// Read config file at communication section.
+///
 void ZevisionGen::onReadCommConfig() {
     QM_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
     S_port = QM_commConfig["Port"];
@@ -145,9 +136,12 @@ void ZevisionGen::onReadCommConfig() {
     }
 }
 
+///
+/// \brief ZevisionGen::onSendCommand. Custom public SLOT.
+/// Send command to serialport. Connected to QT_acquireTimer.
+///
 void ZevisionGen::onSendCommand() {
     bool b_isConnected = C_serial->getConnectState();
-    QString s_currentTime = QDateTime::currentDateTime().toString("hh:mm:ss.z");
     QMap<QString, QByteArray> qm_cmd = C_helper->zevisonCommandGenAlpha(&S_command, I_zevisionProtocol);
     QStringList sl_msg = C_helper->zevisionMsgtoList(qm_cmd["cmd_treated"], I_zevisionProtocol);
     setTblData(sl_msg, ui->msg_tb);
@@ -160,7 +154,11 @@ void ZevisionGen::onSendCommand() {
     }
 }
 
-
+///
+/// \brief ZevisionGen::onRecvResponse. Custom public SLOT.
+/// Connected to SerialCommSingleton.
+/// \param qm_data. QVariantMap
+///
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
     QByteArray ba_resp = qm_data["data"].toByteArray();
     QStringList sl_msg = C_helper->zevisionMsgtoList(ba_resp, I_zevisionProtocol);
@@ -169,16 +167,60 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
 
 
 
-void ZevisionGen::on_send_btn_clicked() {
-    onReadCommConfig();
-    S_command = ui->cmd_le->text().toUpper();
-    bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
-    ui->send_btn->setText(b_isAcquireTimerActive ? "Start" : "Stop");
-    ui->cmd_le->setEnabled(b_isAcquireTimerActive);
-    if(b_isAcquireTimerActive) {
-        QT_acquireTimer->stop();
-        return;
+///
+/// \brief ZevisionGen::initializeTbl. Initialize message and response table.
+/// Each table has two columns and 9 rows.
+///
+void ZevisionGen::initializeTbl() {
+    ui->msg_tb->clear();
+    ui->msg_tb->setColumnCount(2);
+    ui->resp_tb->clear();
+    ui->resp_tb->setColumnCount(2);
+    QStringList tblHeader;
+    tblHeader << tr("Item") << tr("Value");
+    ui->msg_tb->setHorizontalHeaderLabels(tblHeader);
+    ui->msg_tb->verticalHeader()->setVisible(false);
+    ui->msg_tb->horizontalHeader()->resizeSection(0, 90);
+    ui->msg_tb->horizontalHeader()->resizeSection(1, 85);
+    ui->msg_tb->horizontalHeader()->setStretchLastSection(true);
+    ui->msg_tb->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->msg_tb->setRowCount(9);
+    ui->resp_tb->setHorizontalHeaderLabels(tblHeader);
+    ui->resp_tb->verticalHeader()->setVisible(false);
+    ui->resp_tb->horizontalHeader()->resizeSection(0, 90);
+    ui->resp_tb->horizontalHeader()->resizeSection(1, 85);
+    ui->resp_tb->horizontalHeader()->setStretchLastSection(true);
+    ui->resp_tb->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->resp_tb->setRowCount(9);
+    for(int i = 0; i < 9; i++) {
+        QString s_head = QSL_tableHead.at(i);
+        ui->msg_tb->setItem(i, 0, new QTableWidgetItem(s_head));
+        ui->resp_tb->setItem(i, 0, new QTableWidgetItem(s_head));
+        ui->msg_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
+        ui->resp_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
     }
-    QT_acquireTimer->start(1000);
 }
 
+///
+/// \brief ZevisionGen::setTblData.
+/// \param sl_data, const QStringList
+/// \param tbl, const QTableWidget *
+///
+void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl) {
+    int i_slLength = sl_data.length();
+    if(i_slLength > 9) {
+        on_send_btn_clicked();
+        if(D_commSet->isActiveWindow()) {
+            return;
+        }
+        C_helper->normalErr(
+            1,
+            "Message error",
+            sl_data.last()
+        );
+        return;
+    }
+    for (int i = 0; i < 9 ; i++ ) {
+        tbl->item(i, 1)->setText(sl_data.at(i));
+    }
+}

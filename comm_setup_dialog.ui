@@ -228,7 +228,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>Connect</string>
+      <string>Find</string>
      </property>
     </widget>
    </item>

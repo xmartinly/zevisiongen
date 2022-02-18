@@ -28,8 +28,6 @@ public:
 
     void setProtocol(const int protocol);
 
-    int getProtocol();
-
 public slots:
 
     void onRecvResponse(QVariantMap qm_resp);

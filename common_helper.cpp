@@ -4,10 +4,39 @@
 CommonHelper::CommonHelper(QObject *parent): QObject(parent) {
 }
 
-QString CommonHelper::zevisionErrorMsg(ZevisionErrorCode code) const {
-    return QM_errorMsg[code];
+///
+/// \brief CommonHelper::zevisionErrorMsg.
+/// \param code. char
+/// \return error string. QString
+///
+QString CommonHelper::zevisionErrorMsg(const char code) const {
+//    QString s_error;
+//    A = 0x41,
+//    B = 0x42,
+//    C = 0x43,
+//    D = 0x44,
+//    F = 0x46,
+//    L = 0x4c,
+//    T = 0x54
+    QMap<char, QString> qm_errs = {
+        {'A', "Illegal command, the command is not supported."},
+        {'B', "Illegal parameter value"},
+        {'C', "Checksum error (only when checksum is enabled)."},
+        {'D', "Illegal format"},
+        {'F', "State error, the system is in the wrong state."},
+        {'L', "Length error (only when length is enabled)."},
+        {'T', "Time out, only part of a command was received."},
+    };
+    bool b_msgFound = qm_errs.contains(code);
+//    qDebug() << QM_errorMsg;
+    return b_msgFound ? qm_errs.find(code).value() : "Undefined." ;
 }
 
+///
+/// \brief CommonHelper::zevisionMsgSplit. Split message.
+/// \param msg. QByteArray
+/// \return qm_msgList. QVariantMap.
+///
 QVariantMap CommonHelper::zevisionMsgSplit(const QByteArray msg) {
     QVariantMap qm_msgList;
     QList<QByteArray> qlb_msg = msg.split(';');
@@ -25,12 +54,23 @@ QVariantMap CommonHelper::zevisionMsgSplit(const QByteArray msg) {
     return qm_msgList;
 }
 
+///
+/// \brief CommonHelper::zevisionProtocolCal. Calculate protocol status.
+/// \param protocol. const int
+/// \return QList.{i_isLength, i_isChksum}
+///
 QList<int> CommonHelper::zevisionProtocolCal(const int protocol) {
     int i_isLength = protocol % 2;
     int i_isChksum = protocol > 1 ;
     return {i_isLength, i_isChksum};
 }
 
+///
+/// \brief CommonHelper::zevisionMsgtoList. Calculate message according to the given protocol.
+/// \param msg. const QByteArray
+/// \param protocol. const int
+/// \return qsl_msg. QStringList
+///
 QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int protocol) {
 // 0   "Time",
 // 1   "Start Char",
@@ -41,25 +81,35 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
 // 6   "Protocol",
 // 7   "Hex",
 // 8   "String"
+    //initialize message string list.
     QStringList qsl_msg;
     qsl_msg << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a";
-    QString s_protocol, s_msg;
-    int i_msgLength = msg.length(), i_skipLength = 0, i_msgOffsetPos = 1;
+    QString s_protocol;
+    QString s_msg;
+    int i_msgLength = msg.length(),
+        i_skipLength = 0,
+        i_msgOffsetPos = 1,
+        i_negCharPos = msg.indexOf('-');
+    if(i_negCharPos != -1) { //Found error char '-'
+        char c_error = msg.at(i_negCharPos + 1);
+        qsl_msg.append(zevisionErrorMsg(c_error));
+        return qsl_msg;
+    }
     qsl_msg[0] = QDateTime::currentDateTime().toString("hh:mm:ss.z");
     qsl_msg[1] = msg.at(0); //start char
     qsl_msg[5] = msg.at(i_msgLength - 1); //stop char
-    qsl_msg[7] = msg.toHex(); //hex string
+    qsl_msg[7] = formatHexStr(msg); //hex string
     foreach (char s, msg) {
         s_msg += QString("%1").arg(s);
     }
-    qsl_msg[8] = s_msg; //string
-    if(protocol == ZevisionChecksum || protocol == ZevisionOptional) {
+    qsl_msg[8] = s_msg; //message string
+    if(protocol == ZevisionChecksum || protocol == ZevisionOptional) { //add checksum string
         i_skipLength += 1;
         int i_chksum = msg.at(i_msgLength - 2) & 0xff;
         qsl_msg[4] = "hex: " + QString::number(i_chksum, 16) + " | int: " + QString::number(i_chksum);
         s_protocol += "@WithChecksum";
     }
-    if(protocol == ZevisionLength || protocol == ZevisionOptional) {
+    if(protocol == ZevisionLength || protocol == ZevisionOptional) { //add length string
         i_skipLength += 1;
         i_msgOffsetPos += 2;
         QByteArray ba_length = msg.mid(1, 2);
@@ -67,13 +117,17 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
         qsl_msg[2] = "hex: " + ba_length.toHex() + " | int: " + QString::number(i_length);
         s_protocol += "@WithLength";
     }
-    qsl_msg[6] = s_protocol;
-    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_msgOffsetPos - i_skipLength);
-    qDebug() <<  qsl_msg;
+    qsl_msg[6] = s_protocol; //add protocol string
+    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_msgOffsetPos - i_skipLength); //slice message data
     return qsl_msg;
 }
 
-
+///
+/// \brief CommonHelper::zevisonRespCal. Calculate response data.
+/// \param response. const QByteArray
+/// \param protocol. int
+/// \return qm_resp. QVariantMap.
+///
 QVariantMap CommonHelper::zevisonRespCal(const QByteArray response, int protocol) {
     QVariantMap qm_resp;
     QByteArray ba_resp;
@@ -88,7 +142,7 @@ QVariantMap CommonHelper::zevisonRespCal(const QByteArray response, int protocol
     if(b_msgStatusFialed) { // negative char found
         char c_error = response.at(i_respStatusCharNegPos + 1);
         qm_resp["msg_err_char"] = c_error;
-        qm_resp["msg_err"] = zevisionErrorMsg((ZevisionErrorCode)c_error);
+        qm_resp["msg_err"] = zevisionErrorMsg(c_error);
         return qm_resp;
     }
     //protocol enabled length
@@ -134,11 +188,6 @@ QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cm
     qm_cmd.insert("cmd_treated", ba_cmd);
     return qm_cmd;
 }
-
-//QString CommonHelper::zevisionErrorMsg(const int error_code) const {
-//    ZevisionErrorCode  error = error_code;
-//    return QM_errorMsg[error_code];
-//}
 
 ///
 /// \brief CommonHelper::writeSettings. Write settings to .ini file.
@@ -277,7 +326,6 @@ QMap<QString, QMap<QString, QString>> CommonHelper::readDataMap(const QString *f
     return qm_data;
 }
 
-
 ///
 /// \brief formatHexStr
 /// \param hexStr
@@ -287,6 +335,11 @@ QString CommonHelper::formatHexStr(QString hexStr) {
     return hexStr.indexOf("0") == 0 ? hexStr.mid(1, 1) : hexStr;
 }
 
+///
+/// \brief CommonHelper::formatHexStr. Format QByteArray to hex string with blank.
+/// \param msg. const QByteArray
+/// \return s_msg. QString
+///
 QString CommonHelper::formatHexStr(const QByteArray msg) {
     QString s_hexMsg = msg.toHex();
     int i_msgLength = msg.length();
@@ -312,6 +365,11 @@ int CommonHelper::infTFCCks(QByteArray bytes) {
     return sum % 256;
 }
 
+///
+/// \brief CommonHelper::msgLengthCal. Calculate message length to QByteArray.
+/// \param msg. const QByteArray
+/// \return ba_length. QByteArray
+///
 QByteArray CommonHelper::msgLengthCal(const QByteArray msg) {
     QByteArray ba_length;
     int i_totalLength = msg.length();
@@ -322,15 +380,17 @@ QByteArray CommonHelper::msgLengthCal(const QByteArray msg) {
     return ba_length;
 }
 
+///
+/// \brief CommonHelper::lengthBytesCal. Calculate message length from QByteArray.
+/// \param length. const QByteArray
+/// \return int. message length in decimal.
+///
 int CommonHelper::lengthBytesCal(const QByteArray length) {
     if(length.length() != 2) {
         return -1;
     }
     return (int)length.at(0) * 256 + (int)length.at(1);
 }
-
-
-
 
 ///
 /// \brief CommonHelper::getPixmap. Set icon.
