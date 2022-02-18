@@ -8,6 +8,7 @@
 #include <QMap>
 #include <QDir>
 #include <QDebug>
+#include <QDateTime>
 #include <QSettings>
 #include <math.h>
 
@@ -17,7 +18,6 @@ class CommonHelper : public QObject {
 //    Q_ENUMS(ControllerType)
 public:
     CommonHelper(QObject *parent = 0);
-
 
     enum CommandType {
         ReadCommand,
@@ -87,7 +87,7 @@ public:
     };
     static int infTFCCks(QByteArray bytes);
 
-    inline QByteArray msgLengthCal(const QByteArray msg);
+    QByteArray msgLengthCal(const QByteArray msg);
 
     inline int lengthBytesCal(const QByteArray length);
 
@@ -113,13 +113,15 @@ public:
 
     QMap<QString, QByteArray> zevisonCommandGenAlpha(const QString *cmd, const int protocol);
 
-    QVariantMap zevisonMessageCal(const QByteArray response, int protocol);
+    QVariantMap zevisonRespCal(const QByteArray response, int protocol);
 
     QString zevisionErrorMsg(ZevisionErrorCode) const;
 
     QVariantMap zevisionMsgSplit(const QByteArray msg);
 
-    inline QList<int> zevisionProtocolCal(const int protocol);
+    QList<int> zevisionProtocolCal(const int protocol);
+
+    QStringList zevisionMsgtoList(const QByteArray msg, const int protocol);
 
 
     QMap<QString, QStringList> readData(const QString *fileName);

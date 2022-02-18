@@ -31,8 +31,47 @@ QList<int> CommonHelper::zevisionProtocolCal(const int protocol) {
     return {i_isLength, i_isChksum};
 }
 
+QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int protocol) {
+// 0   "Time",
+// 1   "Start Char",
+// 2   "Msg Length",
+// 3   "Data",
+// 4   "Checksum",
+// 5   "Stop Char",
+// 6   "Protocol",
+// 7   "Hex",
+// 8   "String"
+    QStringList qsl_msg;
+    qsl_msg << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a";
+    QString s_protocol, s_msg;
+    int i_msgLength = msg.length(), i_skipLength = 0, i_msgOffsetPos = 1;
+    qsl_msg[0] = QDateTime::currentDateTime().toString("hh:mm:ss.z");
+    qsl_msg[1] = msg.at(0); //start char
+    qsl_msg[5] = msg.at(i_msgLength - 1); //stop char
+    qsl_msg[7] = msg.toHex(); //hex string
+    foreach (char s, msg) {
+        s_msg += QString("%1").arg(s);
+    }
+    qsl_msg[8] = s_msg; //string
+    if(protocol == ZevisionChecksum || protocol == ZevisionOptional) {
+        i_skipLength += 1;
+        qsl_msg[4] = QString::number(msg.at(i_msgLength - 2) & 0xff, 16);
+        s_protocol += "@WithChecksum";
+    }
+    if(protocol == ZevisionLength || protocol == ZevisionOptional) {
+        i_skipLength += 1;
+        i_msgOffsetPos += 2;
+        qsl_msg[2] = msg.mid(1, 2).toHex();
+        s_protocol += "@WithLength";
+    }
+    qsl_msg[6] = s_protocol;
+    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_msgOffsetPos - i_skipLength);
+    qDebug() <<  qsl_msg;
+    return qsl_msg;
+}
 
-QVariantMap CommonHelper::zevisonMessageCal(const QByteArray response, int protocol) {
+
+QVariantMap CommonHelper::zevisonRespCal(const QByteArray response, int protocol) {
     QVariantMap qm_resp;
     QByteArray ba_resp;
     QStringList sl_resp;
@@ -78,25 +117,18 @@ QVariantMap CommonHelper::zevisonMessageCal(const QByteArray response, int proto
 QMap<QString, QByteArray> CommonHelper::zevisonCommandGenAlpha(const QString *cmd, const int protocol) {
     QMap<QString, QByteArray> qm_cmd;
     QByteArray ba_cmd = cmd->toLocal8Bit(); //convert to byte array
+    QByteArray ba_length = msgLengthCal(ba_cmd);
+    int i_chksum = infTFCCks(ba_cmd);
     qm_cmd.insert("cmd_str", ba_cmd + '&' + '#' + QString::number(protocol).toLocal8Bit()); //insert cmd string to qmap
-    int i_sum = 0;
     if(protocol == ZevisionChecksum || protocol == ZevisionOptional) { //calculate checksum
-        foreach (char s, ba_cmd) {
-            i_sum += (int)s;
-        }
-        ba_cmd.append((int)(i_sum % 256));
+        ba_cmd.append(i_chksum);
     }
     if(protocol == ZevisionLength || protocol == ZevisionOptional) { //calculate cmd length
-        int i_cmdLen = cmd->length();
-        ba_cmd.prepend((char)i_cmdLen);
-        if(i_cmdLen < 255) {
-            ba_cmd.prepend('\x00');
-        }
+        ba_cmd.prepend(ba_length);
     }
     ba_cmd.prepend('{');
     ba_cmd.append('}');
     qm_cmd.insert("cmd_treated", ba_cmd);
-//    qm_cmd.insert("cmd_protocol", (char)protocol);
     return qm_cmd;
 }
 

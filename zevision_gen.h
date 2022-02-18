@@ -29,12 +29,31 @@ public:
     QString S_version = " | Zevision Command Gen. beta 0.0.1";
     QString S_port = "COM1";
     QString S_baudrate = "115200";
+    QString S_command = "";
+
 
     int I_connectInstTryCount = 0,
-        I_protocol = 0;
+        I_zevisionProtocol = 0;
     bool B_isInstConnected = false;
 
     QMap<QString, QString> QM_commConfig;
+
+    QStringList QSL_tableHead = {
+        "Time",
+        "Start Char",
+        "Msg Length",
+        "Data",
+        "Checksum",
+        "Stop Char",
+        "Protocol",
+        "Hex",
+        "String"
+    };
+
+
+    void initializeTbl();
+
+    void setTblData(const QStringList sl_data, const QTableWidget* tbl);
 
 
 public slots:
@@ -44,6 +63,8 @@ public slots:
     void onInstConnectState();
 
     void onReadCommConfig();
+
+    void onSendCommand();
 
 private slots:
     void on_actionDataLogSetting_triggered();
@@ -60,6 +81,7 @@ private slots:
 
     void on_send_btn_clicked();
 
+
 private:
     Ui::ZevisionGen *ui;
 
@@ -68,7 +90,7 @@ private:
 
     CommSetupDialog *D_commSet;
 
-    QTimer *QT_statTimer;
+    QTimer *QT_statTimer, *QT_acquireTimer;
 
     QLabel *L_statStr = nullptr;
 

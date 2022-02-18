@@ -38,9 +38,9 @@ void CommSetupDialog::setCommConfig() {
 
 void CommSetupDialog::setProtocol(const int protocol) {
     I_zevisionProtocol = protocol;
-    qDebug() << C_helper->zevisionProtocolCal(protocol);
-    bool b_isLength = protocol % 2;
-    bool b_isChksum = protocol > 1 ;
+    QList ql_protocol = C_helper->zevisionProtocolCal(protocol);
+    bool b_isLength = ql_protocol.at(0);
+    bool b_isChksum = ql_protocol.at(1) ;
     ui->chk_chkbox->setChecked(b_isChksum);
     ui->length_chkbox->setChecked(b_isLength);
     //comm_setup_dialog.cpp:43:22: warning: overlapping comparisons always evaluate to true
@@ -84,7 +84,7 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
     QStringList sl_cmd = QString(qm_resp["cmd"].toString()).split("&#");
     setProtocol(I_zevisionProtocol);
     QByteArray ba_response = qm_resp["data"].toByteArray();
-    QVariantMap qvm_response = C_helper->zevisonMessageCal(
+    QVariantMap qvm_response = C_helper->zevisonRespCal(
                                    ba_response,
                                    sl_cmd.at(1).toInt()
                                );
