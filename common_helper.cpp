@@ -85,7 +85,6 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
     QStringList qsl_msg;
     qsl_msg << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a";
     QString s_protocol;
-    QString s_msg;
     int i_msgLength = msg.length(),
         i_skipLength = 0,
         i_msgOffsetPos = 1,
@@ -223,6 +222,12 @@ void CommonHelper::closeSettingFile(QSettings *settingFile) {
     settingFile = nullptr;
 }
 
+///
+/// \brief CommonHelper::saveData
+/// \param data
+/// \param s_file
+/// \param operate
+///
 void CommonHelper::saveData(const QStringList data, const QString s_file, const int operate) {
     QFile outFile(s_file);
     QString s_data = data.join(",");
@@ -542,6 +547,11 @@ QString CommonHelper::hexToBinary(const QString Hex) {
     return str;
 }
 
+///
+/// \brief CommonHelper::bytearrayToString
+/// \param data
+/// \return
+///
 QString CommonHelper::bytearrayToString(const QByteArray data) {
     std::string message(data.constData(), data.length());
     return QString::fromStdString(message);

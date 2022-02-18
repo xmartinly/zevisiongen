@@ -24,6 +24,9 @@ CommSetupDialog::~CommSetupDialog() {
     delete ui;
 }
 
+///
+/// \brief CommSetupDialog::setCommConfig
+///
 void CommSetupDialog::setCommConfig() {
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText(),
@@ -36,6 +39,10 @@ void CommSetupDialog::setCommConfig() {
     C_helper->writeSettings(s_fileName, s_section, qm_commSetup);
 }
 
+///
+/// \brief CommSetupDialog::setProtocol
+/// \param protocol
+///
 void CommSetupDialog::setProtocol(const int protocol) {
     I_zevisionProtocol = protocol;
     QList ql_protocol = C_helper->zevisionProtocolCal(protocol);
@@ -45,13 +52,17 @@ void CommSetupDialog::setProtocol(const int protocol) {
     ui->length_chkbox->setChecked(b_isLength);
 }
 
-
+///
+/// \brief CommSetupDialog::on_close_btn_clicked
+///
 void CommSetupDialog::on_close_btn_clicked() {
     setCommConfig();
     this->close();
 }
 
-
+///
+/// \brief CommSetupDialog::on_conn_btn_clicked
+///
 void CommSetupDialog::on_conn_btn_clicked() {
     if(C_serial->getConnectState()) {
         C_serial->disconnInst();
@@ -68,13 +79,20 @@ void CommSetupDialog::on_conn_btn_clicked() {
     }
 }
 
-
+///
+/// \brief CommSetupDialog::closeEvent
+/// \param event
+///
 void CommSetupDialog::closeEvent(QCloseEvent *event) {
     setCommConfig();
     emit configSetted();
     event->accept();
 }
 
+///
+/// \brief CommSetupDialog::onRecvResponse
+/// \param qm_resp
+///
 void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
     QStringList sl_cmd = QString(qm_resp["cmd"].toString()).split("&#");
 //    setProtocol(sl_cmd.at(1).toInt());
@@ -94,6 +112,9 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
     ui->resp_lb->setText(__resp["resp_data"].toString());
 }
 
+///
+/// \brief CommSetupDialog::on_set_btn_clicked
+///
 void CommSetupDialog::on_set_btn_clicked() {
     if(!C_serial->getConnectState()) {
         C_helper->normalErr(1, "Connection", "Connect instrument first.");

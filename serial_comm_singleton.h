@@ -6,7 +6,8 @@
 #include <QDateTime>
 #include <QSerialPort>
 #include <QQueue>
-#include <QDebug>
+#include <QMap>
+#include <QVariant>
 
 class SerialCommSingleton:  public QObject {
     Q_OBJECT
