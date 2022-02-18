@@ -55,13 +55,16 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
     qsl_msg[8] = s_msg; //string
     if(protocol == ZevisionChecksum || protocol == ZevisionOptional) {
         i_skipLength += 1;
-        qsl_msg[4] = QString::number(msg.at(i_msgLength - 2) & 0xff, 16);
+        int i_chksum = msg.at(i_msgLength - 2) & 0xff;
+        qsl_msg[4] = "hex: " + QString::number(i_chksum, 16) + " | int: " + QString::number(i_chksum);
         s_protocol += "@WithChecksum";
     }
     if(protocol == ZevisionLength || protocol == ZevisionOptional) {
         i_skipLength += 1;
         i_msgOffsetPos += 2;
-        qsl_msg[2] = msg.mid(1, 2).toHex();
+        QByteArray ba_length = msg.mid(1, 2);
+        int i_length = lengthBytesCal(ba_length);
+        qsl_msg[2] = "hex: " + ba_length.toHex() + " | int: " + QString::number(i_length);
         s_protocol += "@WithLength";
     }
     qsl_msg[6] = s_protocol;
