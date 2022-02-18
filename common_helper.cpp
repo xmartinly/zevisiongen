@@ -99,10 +99,7 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
     qsl_msg[1] = msg.at(0); //start char
     qsl_msg[5] = msg.at(i_msgLength - 1); //stop char
     qsl_msg[7] = formatHexStr(msg); //hex string
-    foreach (char s, msg) {
-        s_msg += QString("%1").arg(s);
-    }
-    qsl_msg[8] = s_msg; //message string
+    qsl_msg[8] = bytearrayToString(msg); //message string
     if(protocol == ZevisionChecksum || protocol == ZevisionOptional) { //add checksum string
         i_skipLength += 1;
         int i_chksum = msg.at(i_msgLength - 2) & 0xff;
@@ -224,6 +221,19 @@ void CommonHelper::deleteSection(const QString *fileName, const QString *group) 
 void CommonHelper::closeSettingFile(QSettings *settingFile) {
     delete settingFile;
     settingFile = nullptr;
+}
+
+void CommonHelper::saveData(const QStringList data, const QString s_file, const int operate) {
+    QFile outFile(s_file);
+    QString s_data = data.join(",");
+    if (outFile.size () == 0 && outFile.open(QFile::WriteOnly)) {
+        outFile.close();
+    }
+    if(outFile.open(QFile::WriteOnly | QIODevice::Append)) {
+        QTextStream out(&outFile);
+        out << s_data;
+        outFile.close();
+    }
 }
 
 ///
@@ -530,6 +540,11 @@ QString CommonHelper::hexToBinary(const QString Hex) {
         str += buf;
     }
     return str;
+}
+
+QString CommonHelper::bytearrayToString(const QByteArray data) {
+    std::string message(data.constData(), data.length());
+    return QString::fromStdString(message);
 }
 
 ///

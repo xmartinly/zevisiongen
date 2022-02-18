@@ -117,6 +117,8 @@ public:
 
     QString hexToBinary(const QString Hex);
 
+    QString bytearrayToString(const QByteArray data);
+
 
 
     QMap<QString, QByteArray> zevisonCommandGenAlpha(const QString *cmd, const int protocol);
@@ -153,37 +155,7 @@ public:
 
     void closeSettingFile(QSettings *settingFile);
 
-//    void saveData(const QMap<QString, QString> *tfc_data, QString s_fileName) {
-//        QString s_file = "./data/" + s_fileName;
-//        QFile outFile(s_file);
-//        QStringList sl_header, sl_data;
-//        sl_header << "Time\t"
-//                  << "Filtered Rate\t"
-//                  << "Fundamental Frequency\t"
-//                  << "Output Status\t"
-//                  << "Input Status\t"
-//                  << "Transient Messages\t"
-//                  << "DAC Error\n";
-//        sl_data  << (*tfc_data)["Time"] + "\t"
-//                 << (*tfc_data)["Filtered Rate"] + "\t"
-//                 << (*tfc_data)["Fundamental Frequency"] + "\t"
-//                 << "'" + (*tfc_data)["Output Status"] + "\t"
-//                 << "'" + (*tfc_data)["Input Status"] + "\t"
-//                 << (*tfc_data)["Transient Messages"] + "\t"
-//                 << (*tfc_data)["DAC Error"] + "\n";
-//        if (outFile.size () == 0 && outFile.open(QFile::WriteOnly)) {
-//            foreach (QString s, sl_header) {
-//                outFile.write(s.toStdString().c_str());
-//            }
-//            outFile.close();
-//        }
-//        if(outFile.open(QFile::WriteOnly | QIODevice::Append)) {
-//            foreach (QString s, sl_data) {
-//                outFile.write(s.toStdString().c_str());
-//            }
-//            outFile.close();
-//        }
-//    }
+    void saveData(const QStringList data, const QString s_file, const int operate);
 
 
 

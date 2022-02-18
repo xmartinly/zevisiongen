@@ -12,6 +12,7 @@
 #include "common_helper.h"
 #include "serial_comm_singleton.h"
 #include "comm_setup_dialog.h"
+#include "data_log_dialog.h"
 //#include "inficon_inst.h"
 
 QT_BEGIN_NAMESPACE
@@ -48,6 +49,23 @@ public:
     QString S_command = "";
 
     ///
+    /// \brief S_filePath
+    ///
+    QString S_filePath = "./data";
+
+    ///
+    /// \brief S_fileName
+    ///
+    QString S_fileName;
+
+    ///
+    /// \brief QSL_dataToSave
+    ///
+    QStringList QSL_dataToSave;
+
+
+
+    ///
     /// \brief I_connectInstTryCount. Connection tries count. Will stop QT_statTimer when increase to 10.
     ///
     int I_connectInstTryCount = 0;
@@ -58,11 +76,29 @@ public:
     int I_zevisionProtocol = 0;
 
     ///
+    /// \brief I_collectIntvl
+    ///
+    int I_collectIntvl = 500;
+
+    ///
+    /// \brief I_fileOperate
+    ///
+    int I_fileOperate = 1;
+
+    ///
     /// \brief B_isInstConnected
     ///
     bool B_isInstConnected = false;
 
+    ///
+    /// \brief B_isUsingTrans
+    ///
     bool B_isUsingTrans = false;
+
+    ///
+    /// \brief B_isSaveData
+    ///
+    bool B_isSaveData = false;
 
     ///Communication configs. Include port, baudrate, protocol
     QMap<QString, QString> QM_commConfig;
@@ -107,7 +143,7 @@ public slots:
     ///
     /// \brief onReadCommConfig
     ///
-    void onReadCommConfig();
+    void onReadConfig();
 
     ///
     /// \brief onSendCommand
@@ -147,6 +183,11 @@ private:
     /// \brief D_commSet. CommSetupDialog pointer.
     ///
     CommSetupDialog *D_commSet;
+
+    ///
+    /// \brief D_dataLog. DataLogDialog pointer.
+    ///
+    DataLogDialog *D_dataLog;
 
     ///
     /// \brief QT_statTimer.

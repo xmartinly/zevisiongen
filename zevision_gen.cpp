@@ -5,6 +5,7 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ZevisionGen) {
     ui->setupUi(this);
+    S_fileName = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     C_serial = SerialCommSingleton::GetInstance();
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &ZevisionGen::onRecvResponse);
     L_statStr = new QLabel("Inst Offline." + S_version);
@@ -15,9 +16,10 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     QT_acquireTimer = new QTimer( this );
     connect( QT_statTimer, SIGNAL(timeout()), this, SLOT(onInstConnectState()));
     connect( QT_acquireTimer, SIGNAL(timeout()), this, SLOT(onSendCommand()));
-    onReadCommConfig();
+    onReadConfig();
     initializeTbl();
     m_translator = new QTranslator(qApp);
+//    qDebug() << S_fileName;
 }
 
 ZevisionGen::~ZevisionGen() {
@@ -42,22 +44,35 @@ void ZevisionGen::on_actionToggle_CHS_ENG_triggered() {
 /// \brief ZevisionGen::on_send_btn_clicked. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_send_btn_clicked() {
-    onReadCommConfig();
+    onReadConfig();
     S_command = ui->cmd_le->text().toUpper();
+    bool B_isCmdEmpty = S_command.length() == 0;
     bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
-    ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
-    ui->cmd_le->setEnabled(b_isAcquireTimerActive);
+    if(B_isCmdEmpty ) {
+        C_helper->normalErr(1,
+                            tr("Command error"),
+                            tr("Command can not be empty.")
+                           );
+        if(b_isAcquireTimerActive) {
+            QT_acquireTimer->stop();
+        }
+        return;
+    }
     if(b_isAcquireTimerActive) {
         QT_acquireTimer->stop();
         return;
     }
-    QT_acquireTimer->start(1000);
+    ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
+    ui->cmd_le->setEnabled(b_isAcquireTimerActive);
+    QT_acquireTimer->start(I_collectIntvl);
 }
 
 ///
 /// \brief ZevisionGen::on_actionDataLogSetting_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionDataLogSetting_triggered() {
+    D_dataLog = new DataLogDialog;
+    D_dataLog->exec();
 }
 
 ///
@@ -71,7 +86,7 @@ void ZevisionGen::on_actionExit_triggered() {
 ///
 void ZevisionGen::on_actionCommSettings_triggered() {
     D_commSet = new CommSetupDialog;
-    connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadCommConfig);
+    connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadConfig);
     D_commSet->exec();
 }
 
@@ -145,13 +160,18 @@ void ZevisionGen::onInstConnectState() {
 
 ///
 /// \brief ZevisionGen::onReadCommConfig. Custom public SLOT.
-/// Read config file at communication section.
+/// Read config file at communication and DataLog section.
 ///
-void ZevisionGen::onReadCommConfig() {
+void ZevisionGen::onReadConfig() {
     QM_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
     S_port = QM_commConfig["Port"];
     S_baudrate = QM_commConfig["Baudrate"];
     I_zevisionProtocol = QM_commConfig["Protocol"].toInt();
+    QMap<QString, QString> qm_dataSetup = C_helper->readSection("./", "zevision.ini", "DataLog");
+    B_isSaveData = qm_dataSetup["SaveData"].toInt();
+    S_filePath = qm_dataSetup["Path"] + "/" + S_fileName + ".csv";
+    I_fileOperate = qm_dataSetup["Operate"].toInt();
+    I_collectIntvl = qm_dataSetup["Interval"].toInt();
     if(C_serial->getConnectState()) {
         return;
     }
@@ -167,8 +187,15 @@ void ZevisionGen::onReadCommConfig() {
 void ZevisionGen::onSendCommand() {
     bool b_isConnected = C_serial->getConnectState();
     QMap<QString, QByteArray> qm_cmd = C_helper->zevisonCommandGenAlpha(&S_command, I_zevisionProtocol);
-    QStringList sl_msg = C_helper->zevisionMsgtoList(qm_cmd["cmd_treated"], I_zevisionProtocol);
+    QByteArray ba_cmd = qm_cmd["cmd_treated"];
+    QStringList sl_msg = C_helper->zevisionMsgtoList(ba_cmd, I_zevisionProtocol);
     setTblData(sl_msg, ui->msg_tb);
+    QSL_dataToSave.clear();
+    QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
+    QSL_dataToSave.append(S_command);
+    QSL_dataToSave.append(sl_msg[6]);
+    QSL_dataToSave.append(C_helper->bytearrayToString(ba_cmd));
+    QSL_dataToSave.append(ba_cmd.toHex());
     if(b_isConnected) {
         C_serial->cmdEnQueue(
             qm_cmd
@@ -186,6 +213,12 @@ void ZevisionGen::onSendCommand() {
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
     QByteArray ba_resp = qm_data["data"].toByteArray();
     QStringList sl_msg = C_helper->zevisionMsgtoList(ba_resp, I_zevisionProtocol);
+    QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
+    QSL_dataToSave.append(C_helper->bytearrayToString(ba_resp));
+    QSL_dataToSave.append(ba_resp.toHex() + "\n");
+    if(B_isSaveData && QT_acquireTimer->isActive()) {
+        C_helper->saveData(QSL_dataToSave, S_filePath, 1);
+    }
     setTblData(sl_msg, ui->resp_tb);
 }
 

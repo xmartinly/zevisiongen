@@ -125,6 +125,89 @@
     </message>
 </context>
 <context>
+    <name>DataLogDialog</name>
+    <message>
+        <location filename="data_log_dialog.ui" line="26"/>
+        <source>DataLog</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="40"/>
+        <source>SaveData</source>
+        <translation>SaveData</translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="66"/>
+        <source>Path</source>
+        <translation>Path</translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="79"/>
+        <source>./data</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="92"/>
+        <source>File</source>
+        <translation>File</translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="106"/>
+        <source>Append</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="111"/>
+        <source>OverWrite</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="116"/>
+        <source>New</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="130"/>
+        <source>Interval</source>
+        <translation>Interval</translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="144"/>
+        <source>100</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="149"/>
+        <source>250</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="154"/>
+        <source>500</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="159"/>
+        <source>1000</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="164"/>
+        <source>2000</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="205"/>
+        <source>Close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="data_log_dialog.ui" line="231"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+</context>
+<context>
     <name>ZevisionGen</name>
     <message>
         <location filename="zevision_gen.ui" line="14"/>
@@ -139,7 +222,7 @@
     </message>
     <message>
         <location filename="zevision_gen.ui" line="82"/>
-        <location filename="zevision_gen.cpp" line="49"/>
+        <location filename="zevision_gen.cpp" line="65"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
@@ -199,87 +282,97 @@
         <translation>Toggle CHS/ENG</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="49"/>
+        <location filename="zevision_gen.cpp" line="53"/>
+        <source>Command error</source>
+        <translation>Command error</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="54"/>
+        <source>Command can not be empty.</source>
+        <translation>Command can not be empty.</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="65"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="126"/>
+        <location filename="zevision_gen.cpp" line="140"/>
         <source>Comm Config Error</source>
         <translation>Comm Config Error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="127"/>
+        <location filename="zevision_gen.cpp" line="141"/>
         <source>No communication config found.</source>
         <translation>No communication config found.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="136"/>
+        <location filename="zevision_gen.cpp" line="150"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="137"/>
+        <location filename="zevision_gen.cpp" line="151"/>
         <source>Can&apos;t open port.</source>
         <translation>Can&apos;t open port.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="205"/>
+        <location filename="zevision_gen.cpp" line="237"/>
         <source>Item</source>
         <translation>Item</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="205"/>
+        <location filename="zevision_gen.cpp" line="237"/>
         <source>Value</source>
         <translation>Value</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="243"/>
+        <location filename="zevision_gen.cpp" line="275"/>
         <source>Message error</source>
         <translation>Message error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="72"/>
+        <location filename="zevision_gen.h" line="108"/>
         <source>Time</source>
         <translation>Time</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="73"/>
+        <location filename="zevision_gen.h" line="109"/>
         <source>Start Char</source>
         <translation>Start Char</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="74"/>
+        <location filename="zevision_gen.h" line="110"/>
         <source>Msg Length</source>
         <translation>Msg Length</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="75"/>
+        <location filename="zevision_gen.h" line="111"/>
         <source>Data</source>
         <translation>Data</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="76"/>
+        <location filename="zevision_gen.h" line="112"/>
         <source>Checksum</source>
         <translation>Checksum</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="77"/>
+        <location filename="zevision_gen.h" line="113"/>
         <source>Stop Char</source>
         <translation>Stop Char</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="78"/>
+        <location filename="zevision_gen.h" line="114"/>
         <source>Protocol</source>
         <translation>Protocol</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="79"/>
+        <location filename="zevision_gen.h" line="115"/>
         <source>Hex</source>
         <translation>Hex</translation>
     </message>
     <message>
-        <location filename="zevision_gen.h" line="80"/>
+        <location filename="zevision_gen.h" line="116"/>
         <source>String</source>
         <translation>String</translation>
     </message>

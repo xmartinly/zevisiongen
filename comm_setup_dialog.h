@@ -43,6 +43,7 @@ private:
     Ui::CommSetupDialog *ui;
 
     CommonHelper *C_helper;
+
     SerialCommSingleton *C_serial;
 
     void closeEvent(QCloseEvent *event);
