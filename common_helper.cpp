@@ -85,7 +85,7 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
     qsl_msg << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a";
     QString s_protocol;
     int i_msgLength = msg.length(),
-        i_skipLength = 0,
+        i_skipLength = 2,
         i_msgOffsetPos = 1,
         i_negCharPos = msg.indexOf('-');
     if(i_negCharPos != -1) { //Found error char '-'
@@ -105,7 +105,7 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
         s_protocol += "@WithChecksum";
     }
     if(protocol == ZevisionLength || protocol == ZevisionOptional) { //add length string
-        i_skipLength += 1;
+        i_skipLength += 2;
         i_msgOffsetPos += 2;
         QByteArray ba_length = msg.mid(1, 2);
         int i_length = lengthBytesCal(ba_length);
@@ -113,7 +113,7 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
         s_protocol += "@WithLength";
     }
     qsl_msg[6] = s_protocol; //add protocol string
-    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_msgOffsetPos - i_skipLength); //slice message data
+    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_skipLength); //slice message data
     return qsl_msg;
 }
 
