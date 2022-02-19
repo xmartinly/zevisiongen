@@ -111,6 +111,10 @@ class ZevisionGen : public QMainWindow {
     ///
     void setTblData(const QStringList sl_data, const QTableWidget *tbl);
 
+    ///
+    /// \brief refreshTblWidget. Translate message/response table.
+    /// \param b_useCHS. bool
+    ///
     void refreshTblWidget(bool b_useCHS);
 
   public slots:
