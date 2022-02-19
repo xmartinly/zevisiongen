@@ -5,8 +5,7 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CommSetupDialog) {
     ui->setupUi(this);
-    Qt::WindowFlags flags = Qt::Dialog;
-    flags |= Qt::WindowCloseButtonHint;
+    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
     C_serial = SerialCommSingleton::GetInstance();
     C_helper = new CommonHelper;
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );

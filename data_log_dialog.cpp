@@ -5,8 +5,7 @@ DataLogDialog::DataLogDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DataLogDialog) {
     ui->setupUi(this);
-    Qt::WindowFlags flags = Qt::Dialog;
-    flags |= Qt::WindowCloseButtonHint;
+    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
     C_helper = new CommonHelper;
     ui->fileOperate_cb->setHidden(true);
     ui->label_2->setHidden(true);
