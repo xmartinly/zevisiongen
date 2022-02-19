@@ -6,12 +6,12 @@
     <message>
         <location filename="about_dialog.ui" line="26"/>
         <source>About</source>
-        <translation type="unfinished">关于</translation>
+        <translation>关于</translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="51"/>
         <source>Zevision Command Gen. beta v0.0.1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="73"/>
@@ -21,17 +21,17 @@
     <message>
         <location filename="about_dialog.ui" line="99"/>
         <source>INFICON Zevision Instrument communication test program.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="115"/>
         <source>Contact:778567144@qq.com</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="128"/>
         <source>Author:Liang Yan</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -359,21 +359,6 @@
         <translation>无法打开端口.请检查端口设置.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="248"/>
-        <source>Item</source>
-        <translation>项目</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="248"/>
-        <source>Value</source>
-        <translation>值</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="289"/>
-        <source>Message error</source>
-        <translation>数据错误</translation>
-    </message>
-    <message>
         <location filename="zevision_gen.cpp" line="233"/>
         <source>Time</source>
         <translation>时间</translation>
@@ -417,6 +402,21 @@
         <location filename="zevision_gen.cpp" line="241"/>
         <source>String</source>
         <translation>字符串</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="248"/>
+        <source>Item</source>
+        <translation>项目</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="248"/>
+        <source>Value</source>
+        <translation>值</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="289"/>
+        <source>Message error</source>
+        <translation>数据错误</translation>
     </message>
 </context>
 </TS>

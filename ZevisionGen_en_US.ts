@@ -6,12 +6,12 @@
     <message>
         <location filename="about_dialog.ui" line="26"/>
         <source>About</source>
-        <translation type="unfinished">About</translation>
+        <translation>About</translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="51"/>
         <source>Zevision Command Gen. beta v0.0.1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="73"/>
@@ -21,17 +21,17 @@
     <message>
         <location filename="about_dialog.ui" line="99"/>
         <source>INFICON Zevision Instrument communication test program.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="115"/>
         <source>Contact:778567144@qq.com</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="about_dialog.ui" line="128"/>
         <source>Author:Liang Yan</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

@@ -39,6 +39,8 @@ TRANSLATIONS += \
     ZevisionGen_zh_CN.ts \
     ZevisionGen_en_US.ts
 
+CODECFORTR = UTF-8
+
 CONFIG += lrelease
 CONFIG += embed_translations
 
