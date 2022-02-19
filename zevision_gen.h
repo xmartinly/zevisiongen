@@ -25,7 +25,7 @@ QT_END_NAMESPACE
 class ZevisionGen : public QMainWindow {
     Q_OBJECT
 
-  public:
+public:
     ZevisionGen(QWidget *parent = nullptr);
     ~ZevisionGen();
 
@@ -63,8 +63,6 @@ class ZevisionGen : public QMainWindow {
     /// \brief QSL_dataToSave
     ///
     QStringList QSL_dataToSave;
-
-
 
     ///
     /// \brief I_connectInstTryCount. Connection tries count. Will stop QT_statTimer when increase to 10.
@@ -104,19 +102,6 @@ class ZevisionGen : public QMainWindow {
     ///Communication configs. Include port, baudrate, protocol
     QMap<QString, QString> QM_commConfig;
 
-    ///Fixed table headers.
-    QStringList QSL_tableHead = {
-        tr("Time"),
-        tr("Start Char"),
-        tr("Msg Length"),
-        tr("Data"),
-        tr("Checksum"),
-        tr("Stop Char"),
-        tr("Protocol"),
-        tr("Hex"),
-        tr("String")
-    };
-
     ///
     /// \brief initializeTbl
     ///
@@ -129,7 +114,7 @@ class ZevisionGen : public QMainWindow {
     ///
     void setTblData(const QStringList sl_data, const QTableWidget *tbl);
 
-  public slots:
+public slots:
 
     ///
     /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
@@ -152,7 +137,7 @@ class ZevisionGen : public QMainWindow {
     void onSendCommand();
 
 
-  private slots:
+private slots:
     void on_actionDataLogSetting_triggered();
 
     void on_actionExit_triggered();
@@ -167,7 +152,7 @@ class ZevisionGen : public QMainWindow {
 
     void on_actionToggle_CHS_ENG_triggered();
 
-  private:
+private:
     Ui::ZevisionGen *ui;
 
     ///

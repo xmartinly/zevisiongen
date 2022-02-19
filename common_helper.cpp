@@ -28,7 +28,6 @@ QString CommonHelper::zevisionErrorMsg(const char code) const {
         {'T', "Time out, only part of a command was received."},
     };
     bool b_msgFound = qm_errs.contains(code);
-//    qDebug() << QM_errorMsg;
     return b_msgFound ? qm_errs.find(code).value() : "Undefined." ;
 }
 

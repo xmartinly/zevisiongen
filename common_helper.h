@@ -7,16 +7,16 @@
 #include <QFile>
 #include <QMap>
 #include <QDir>
-#include <QDebug>
 #include <QDateTime>
 #include <QSettings>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTextStream>
 #include <math.h>
 
 class CommonHelper : public QObject {
     Q_OBJECT
-  public:
+public:
     CommonHelper(QObject *parent = 0);
 
     enum CommandType {
