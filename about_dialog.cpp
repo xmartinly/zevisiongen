@@ -6,6 +6,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui(new Ui::AboutDialog) {
     ui->setupUi(this);
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+    setAttribute (Qt::WA_DeleteOnClose);
 }
 
 AboutDialog::~AboutDialog() {

@@ -1,14 +1,15 @@
 ﻿#ifndef ZEVISIONGEN_H
 #define ZEVISIONGEN_H
 
-#include"stable.h"
+//#include"stable.h"
 
-#include "qcustomplot.h"
+
 #include "common_helper.h"
 #include "serial_comm_singleton.h"
 #include "comm_setup_dialog.h"
 #include "data_log_dialog.h"
 #include "about_dialog.h"
+#include "qcustomplot.h"
 //#include "inficon_inst.h"
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +23,7 @@ class ZevisionGen : public QMainWindow {
 
   public:
     ZevisionGen(QWidget *parent = nullptr);
+
     ~ZevisionGen();
 
     ///
@@ -108,6 +110,8 @@ class ZevisionGen : public QMainWindow {
     /// \param tbl
     ///
     void setTblData(const QStringList sl_data, const QTableWidget *tbl);
+
+    void refreshTblWidget(bool b_useCHS);
 
   public slots:
 

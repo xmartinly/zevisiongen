@@ -19,6 +19,8 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     onReadConfig();
     initializeTbl();
     m_translator = new QTranslator(qApp);
+    m_translator->load(":/i18n/ZevisionGen_en_US.qm");
+    qApp->installTranslator(m_translator);
 }
 
 ZevisionGen::~ZevisionGen() {
@@ -32,10 +34,9 @@ void ZevisionGen::on_actionToggle_CHS_ENG_triggered() {
     B_isUsingTrans = !B_isUsingTrans;
     QString s_transFileName;
     s_transFileName = B_isUsingTrans ? "ZevisionGen_zh_CN.qm" :  "ZevisionGen_en_US.qm";
-    if(m_translator->load(":/i18n/" + s_transFileName)) {
-        qApp->installTranslator(m_translator);
-        ui->retranslateUi(this);
-    }
+    m_translator->load(":/i18n/" + s_transFileName);
+    ui->retranslateUi(this);
+    refreshTblWidget(B_isUsingTrans);
 }
 
 
@@ -230,22 +231,22 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
 void ZevisionGen::initializeTbl() {
     ///Fixed table headers.
     QStringList QSL_tableHead = {
-        tr("Time"),
-        tr("Start Char"),
-        tr("Msg Length"),
-        tr("Data"),
-        tr("Checksum"),
-        tr("Stop Char"),
-        tr("Protocol"),
-        tr("Hex"),
-        tr("String")
+        ("Time"),
+        ("Start Char"),
+        ("Msg Length"),
+        ("Data"),
+        ("Checksum"),
+        ("Stop Char"),
+        ("Protocol"),
+        ("Hex"),
+        ("String")
     };
     ui->msg_tb->clear();
     ui->msg_tb->setColumnCount(2);
     ui->resp_tb->clear();
     ui->resp_tb->setColumnCount(2);
     QStringList tblHeader;
-    tblHeader << tr("Item") << tr("Value");
+    tblHeader << "Item" << "Value";
     ui->msg_tb->setHorizontalHeaderLabels(tblHeader);
     ui->msg_tb->verticalHeader()->setVisible(false);
     ui->msg_tb->horizontalHeader()->resizeSection(0, 90);
@@ -293,6 +294,42 @@ void ZevisionGen::setTblData(const QStringList sl_data, const QTableWidget *tbl)
     }
     for (int i = 0; i < 9 ; i++ ) {
         tbl->item(i, 1)->setText(sl_data.at(i));
+    }
+}
+
+void ZevisionGen::refreshTblWidget(bool b_useCHS) {
+    QStringList tblHeader_CHS, tblHeader_ENG;
+    tblHeader_CHS << u8"项目" << u8"值";
+    tblHeader_ENG << "Item" << "Value";
+    QStringList QSL_tableHead_CHS = {
+        (u8"时间"),
+        (u8"开始字符串"),
+        (u8"数据长度"),
+        (u8"数据"),
+        (u8"校验码"),
+        (u8"截止字符串"),
+        (u8"协议"),
+        (u8"十六进制"),
+        (u8"字符串")
+    };
+    QStringList QSL_tableHead_ENG = {
+        ("Time"),
+        ("Start Char"),
+        ("Msg Length"),
+        ("Data"),
+        ("Checksum"),
+        ("Stop Char"),
+        ("Protocol"),
+        ("Hex"),
+        ("String")
+    };
+    QStringList QSL_tableHead = b_useCHS ? QSL_tableHead_CHS : QSL_tableHead_ENG;
+    ui->msg_tb->setHorizontalHeaderLabels(b_useCHS ? tblHeader_CHS : tblHeader_ENG);
+    ui->resp_tb->setHorizontalHeaderLabels(b_useCHS ? tblHeader_CHS : tblHeader_ENG);
+    for(int i = 0; i < 9; i++) {
+        QString s_head = QSL_tableHead.at(i);
+        ui->msg_tb->item(i, 0)->setText(s_head);
+        ui->resp_tb->item(i, 0)->setText(s_head);
     }
 }
 

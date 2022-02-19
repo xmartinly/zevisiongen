@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>480</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,6 +27,7 @@
         </property>
         <property name="font">
          <font>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -118,6 +119,7 @@
           </property>
           <property name="font">
            <font>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -146,6 +148,7 @@
           </property>
           <property name="font">
            <font>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -172,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -215,11 +218,6 @@
   <action name="actionCommSettings">
    <property name="text">
     <string>CommSettings</string>
-   </property>
-  </action>
-  <action name="actionToggle_ENG_CHS">
-   <property name="text">
-    <string>Toggle ENG/CHS</string>
    </property>
   </action>
   <action name="actionHelp">

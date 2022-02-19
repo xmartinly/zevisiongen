@@ -25,5 +25,8 @@
 #include <QCloseEvent>
 #include <QDialog>
 
+#include <QApplication>
+#include <Windows.h>
+
 
 #endif // STABLE_H

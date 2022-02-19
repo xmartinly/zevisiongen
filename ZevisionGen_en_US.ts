@@ -230,10 +230,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation type="vanished">Close</translation>
-    </message>
-    <message>
         <location filename="data_log_dialog.ui" line="53"/>
         <source>OK</source>
         <translation>OK</translation>
@@ -247,176 +243,116 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="34"/>
+        <location filename="zevision_gen.ui" line="35"/>
         <source>Command</source>
         <translation>Command</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="53"/>
+        <location filename="zevision_gen.ui" line="54"/>
         <source>H1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="85"/>
-        <location filename="zevision_gen.cpp" line="57"/>
-        <location filename="zevision_gen.cpp" line="282"/>
+        <location filename="zevision_gen.ui" line="86"/>
+        <location filename="zevision_gen.cpp" line="58"/>
+        <location filename="zevision_gen.cpp" line="283"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="125"/>
+        <location filename="zevision_gen.ui" line="127"/>
         <source>Message</source>
         <translation>Message</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="153"/>
+        <location filename="zevision_gen.ui" line="156"/>
         <source>Response</source>
         <translation>Response</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="180"/>
+        <location filename="zevision_gen.ui" line="183"/>
         <source>File</source>
         <translation>File</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="187"/>
+        <location filename="zevision_gen.ui" line="190"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="195"/>
+        <location filename="zevision_gen.ui" line="198"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="207"/>
+        <location filename="zevision_gen.ui" line="210"/>
         <source>DataLogSetting</source>
         <translation>DataLogSetting</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="212"/>
+        <location filename="zevision_gen.ui" line="215"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="217"/>
+        <location filename="zevision_gen.ui" line="220"/>
         <source>CommSettings</source>
         <translation>CommSettings</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="222"/>
-        <source>Toggle ENG/CHS</source>
-        <translation>Toggle ENG/CHS</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.ui" line="227"/>
+        <location filename="zevision_gen.ui" line="225"/>
         <source>About</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="232"/>
+        <location filename="zevision_gen.ui" line="230"/>
         <source>Document</source>
         <translation>Document</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="237"/>
+        <location filename="zevision_gen.ui" line="235"/>
         <source>Toggle CHS/ENG</source>
         <translation>Toggle CHS/ENG</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="52"/>
+        <location filename="zevision_gen.cpp" line="53"/>
         <source>Command error</source>
         <translation>Command error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="53"/>
+        <location filename="zevision_gen.cpp" line="54"/>
         <source>Command can not be empty.</source>
         <translation>Command can not be empty.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="57"/>
+        <location filename="zevision_gen.cpp" line="58"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="139"/>
+        <location filename="zevision_gen.cpp" line="140"/>
         <source>Comm Config Error</source>
         <translation>Comm Config Error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="140"/>
+        <location filename="zevision_gen.cpp" line="141"/>
         <source>No communication config found.</source>
         <translation>No communication config found.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="149"/>
+        <location filename="zevision_gen.cpp" line="150"/>
         <source>Communication Error</source>
         <translation>Communication Error</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="150"/>
+        <location filename="zevision_gen.cpp" line="151"/>
         <source>Can&apos;t open port.</source>
         <translation>Can&apos;t open port.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="248"/>
-        <source>Item</source>
-        <translation>Item</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="248"/>
-        <source>Value</source>
-        <translation>Value</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="289"/>
+        <location filename="zevision_gen.cpp" line="290"/>
         <source>Message error</source>
         <translation>Message error</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="233"/>
-        <source>Time</source>
-        <translation>Time</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="234"/>
-        <source>Start Char</source>
-        <translation>Start Char</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="235"/>
-        <source>Msg Length</source>
-        <translation>Msg Length</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="236"/>
-        <source>Data</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="237"/>
-        <source>Checksum</source>
-        <translation>Checksum</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="238"/>
-        <source>Stop Char</source>
-        <translation>Stop Char</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="239"/>
-        <source>Protocol</source>
-        <translation>Protocol</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="240"/>
-        <source>Hex</source>
-        <translation>Hex</translation>
-    </message>
-    <message>
-        <location filename="zevision_gen.cpp" line="241"/>
-        <source>String</source>
-        <translation>String</translation>
     </message>
 </context>
 </TS>

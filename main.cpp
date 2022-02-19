@@ -1,8 +1,5 @@
 ﻿#include "zevision_gen.h"
 
-#include <QApplication>
-#include <Windows.h>
-
 
 LONG __RPC_CALLEE ApplicationCrashHandler(EXCEPTION_POINTERS *pException) { //程式异常捕获
     /*
