@@ -1,22 +1,11 @@
 ﻿#ifndef COMMONHELPER_H
 #define COMMONHELPER_H
 
-#include <QMessageBox>
-#include <QObject>
-#include <QIcon>
-#include <QFile>
-#include <QMap>
-#include <QDir>
-#include <QDateTime>
-#include <QSettings>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QTextStream>
-#include <math.h>
+#include"stable.h"
 
 class CommonHelper : public QObject {
     Q_OBJECT
-public:
+  public:
     CommonHelper(QObject *parent = 0);
 
     enum CommandType {

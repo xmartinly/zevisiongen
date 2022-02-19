@@ -1,13 +1,7 @@
 ﻿#ifndef SERIALCOMMSINGLETON_H
 #define SERIALCOMMSINGLETON_H
 
-#include <QObject>
-#include <QTimer>
-#include <QDateTime>
-#include <QSerialPort>
-#include <QQueue>
-#include <QMap>
-#include <QVariant>
+#include"stable.h"
 
 class SerialCommSingleton:  public QObject {
     Q_OBJECT

@@ -1,15 +1,14 @@
 #ifndef INFICONINSTRUMENT_H
 #define INFICONINSTRUMENT_H
 
-#include <QObject>
+#include"stable.h"
 
-class InficonInstrument : public QObject
-{
+class InficonInstrument : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit InficonInstrument(QObject *parent = nullptr);
 
-signals:
+  signals:
 
 };
 

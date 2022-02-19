@@ -27,6 +27,7 @@ HEADERS += \
     inficon_instrument.h \
     qcustomplot.h \
     serial_comm_singleton.h \
+    stable.h \
     zevision_gen.h
 
 FORMS += \
@@ -43,6 +44,11 @@ CODECFORTR = UTF-8
 
 CONFIG += lrelease
 CONFIG += embed_translations
+
+CONFIG+=precompile_header
+PRECOMPILED_HEADER=stable.h
+
+QMAKE_CXXFLAGS += /MP
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

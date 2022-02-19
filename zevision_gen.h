@@ -1,12 +1,7 @@
 ﻿#ifndef ZEVISIONGEN_H
 #define ZEVISIONGEN_H
 
-#include <QMainWindow>
-#include <QFile>
-#include <QMessageBox>
-#include <QTimer>
-#include <QLocale>
-#include <QTranslator>
+#include"stable.h"
 
 #include "qcustomplot.h"
 #include "common_helper.h"
@@ -25,7 +20,7 @@ QT_END_NAMESPACE
 class ZevisionGen : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     ZevisionGen(QWidget *parent = nullptr);
     ~ZevisionGen();
 
@@ -114,7 +109,7 @@ public:
     ///
     void setTblData(const QStringList sl_data, const QTableWidget *tbl);
 
-public slots:
+  public slots:
 
     ///
     /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
@@ -137,7 +132,7 @@ public slots:
     void onSendCommand();
 
 
-private slots:
+  private slots:
     void on_actionDataLogSetting_triggered();
 
     void on_actionExit_triggered();
@@ -152,7 +147,7 @@ private slots:
 
     void on_actionToggle_CHS_ENG_triggered();
 
-private:
+  private:
     Ui::ZevisionGen *ui;
 
     ///

@@ -1,9 +1,7 @@
 ﻿#ifndef COMM_SETUP_DIALOG_H
 #define COMM_SETUP_DIALOG_H
 
-#include <QDialog>
-#include <QVariantMap>
-#include <QCloseEvent>
+#include"stable.h"
 #include "common_helper.h"
 #include "serial_comm_singleton.h"
 
@@ -14,7 +12,7 @@ namespace Ui {
 class CommSetupDialog : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
@@ -32,18 +30,18 @@ public:
 
     void findInst(const QString cmd);
 
-public slots:
+  public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
 
-private slots:
+  private slots:
     void on_close_btn_clicked();
 
     void on_conn_btn_clicked();
 
     void on_set_btn_clicked();
 
-private:
+  private:
     Ui::CommSetupDialog *ui;
 
     CommonHelper *C_helper;
@@ -52,7 +50,7 @@ private:
 
     void closeEvent(QCloseEvent *event);
 
-signals:
+  signals:
     void configSetted();
 };
 
