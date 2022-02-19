@@ -14,7 +14,7 @@ namespace Ui {
 class CommSetupDialog : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
@@ -22,24 +22,29 @@ public:
 
     int I_zevisionProtocol = -1;
 
+
+    QString S_fileName = "zevision.ini";
+
+    QString S_section = "DataLog";
+
     void setCommConfig();
 
     void readProtocol();
 
     void setProtocol(const int protocol);
 
-public slots:
+  public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
 
-private slots:
+  private slots:
     void on_close_btn_clicked();
 
     void on_conn_btn_clicked();
 
     void on_set_btn_clicked();
 
-private:
+  private:
     Ui::CommSetupDialog *ui;
 
     CommonHelper *C_helper;
@@ -48,7 +53,7 @@ private:
 
     void closeEvent(QCloseEvent *event);
 
-signals:
+  signals:
     void configSetted();
 };
 

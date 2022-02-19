@@ -29,14 +29,12 @@ CommSetupDialog::~CommSetupDialog() {
 ///
 void CommSetupDialog::setCommConfig() {
     QString s_port = ui->port_cb->currentText(),
-            s_baudrate = ui->baudrate_cb->currentText(),
-            s_fileName = "zevision.ini",
-            s_section =  "Communication";
+            s_baudrate = ui->baudrate_cb->currentText();
     QMap<QString, QString> qm_commSetup;
     qm_commSetup.insert("Port", s_port);
     qm_commSetup.insert("Baudrate", s_baudrate);
     qm_commSetup.insert("Protocol", QString::number(I_zevisionProtocol));
-    C_helper->writeSettings(s_fileName, s_section, qm_commSetup);
+    C_helper->writeSettings(S_fileName, S_section, qm_commSetup);
 }
 
 ///
@@ -84,7 +82,6 @@ void CommSetupDialog::on_conn_btn_clicked() {
 /// \param event
 ///
 void CommSetupDialog::closeEvent(QCloseEvent *event) {
-    setCommConfig();
     emit configSetted();
     event->accept();
 }

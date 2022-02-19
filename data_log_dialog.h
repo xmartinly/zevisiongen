@@ -2,7 +2,6 @@
 #define DATA_LOG_DIALOG_H
 
 #include <QDialog>
-#include <QCloseEvent>
 
 #include "common_helper.h"
 
@@ -25,8 +24,6 @@ class DataLogDialog : public QDialog {
     QString S_section = "DataLog";
 
   private slots:
-
-    void on_close_btn_clicked();
 
     void on_ok_btn_clicked();
 

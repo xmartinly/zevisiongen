@@ -40,13 +40,11 @@ void DataLogDialog::readDataConfig() {
     }
 }
 
-
-void DataLogDialog::on_close_btn_clicked() {
-    this->close();
-}
-
-
+///
+/// \brief DataLogDialog::on_ok_btn_clicked
+///
 void DataLogDialog::on_ok_btn_clicked() {
     setDataConfig();
+    this->close();
 }
 
