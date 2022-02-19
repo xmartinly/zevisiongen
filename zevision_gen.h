@@ -99,6 +99,9 @@ class ZevisionGen : public QMainWindow {
     ///Communication configs. Include port, baudrate, protocol
     QMap<QString, QString> QM_commConfig;
 
+
+    const QColor QC_ligthGreen = QColor(19, 182, 41);
+
     ///
     /// \brief initializeTbl
     ///
@@ -116,6 +119,8 @@ class ZevisionGen : public QMainWindow {
     /// \param b_useCHS. bool
     ///
     void refreshTblWidget(bool b_useCHS);
+
+    void setWidgeBackgroundColor(const bool b_isResponse = false);
 
   public slots:
 

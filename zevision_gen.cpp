@@ -203,6 +203,7 @@ void ZevisionGen::onSendCommand() {
     } else if(!QT_statTimer->isActive()) {
         QT_statTimer->start(1000);
     }
+    setWidgeBackgroundColor(false);
 }
 
 ///
@@ -220,6 +221,7 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
+    setWidgeBackgroundColor(true);
 }
 
 
@@ -331,6 +333,17 @@ void ZevisionGen::refreshTblWidget(bool b_useCHS) {
         ui->msg_tb->item(i, 0)->setText(s_head);
         ui->resp_tb->item(i, 0)->setText(s_head);
     }
+}
+
+///
+/// \brief ZevisionGen::setWidgeBackgroundColor
+/// \param b_isResponse
+///
+void ZevisionGen::setWidgeBackgroundColor(const bool b_isResponse) {
+    QString s_activeStyleSheet = "background-color: #393E46",
+            s_inActiveStyleSheet = "background-color: #FFFFFF";
+    ui->msg_widget->setStyleSheet(b_isResponse ? s_inActiveStyleSheet : s_activeStyleSheet);
+    ui->resp_widget->setStyleSheet(b_isResponse ? s_activeStyleSheet : s_inActiveStyleSheet);
 }
 
 
