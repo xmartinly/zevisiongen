@@ -12,7 +12,7 @@ namespace Ui {
 class DataLogDialog : public QDialog {
     Q_OBJECT
 
-  public:
+public:
     explicit DataLogDialog(QWidget *parent = nullptr);
     ~DataLogDialog();
 
@@ -24,14 +24,17 @@ class DataLogDialog : public QDialog {
 
     QString S_section = "DataLog";
 
-  private slots:
+private slots:
 
     void on_ok_btn_clicked();
 
-  private:
+private:
     Ui::DataLogDialog *ui;
 
     CommonHelper *C_helper;
+
+signals:
+    void configSetted();
 };
 
 #endif // DATA_LOG_DIALOG_H

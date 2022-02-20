@@ -12,7 +12,7 @@ namespace Ui {
 class CommSetupDialog : public QDialog {
     Q_OBJECT
 
-  public:
+public:
     explicit CommSetupDialog(QWidget *parent = nullptr);
     ~CommSetupDialog();
 
@@ -22,6 +22,8 @@ class CommSetupDialog : public QDialog {
 
     QString S_section = "Communication";
 
+    bool B_isConnectInstSuccess = false;
+
     void setCommConfig();
 
     void readProtocol();
@@ -30,27 +32,35 @@ class CommSetupDialog : public QDialog {
 
     void findInst(const QString cmd);
 
-  public slots:
+public slots:
 
     void onRecvResponse(QVariantMap qm_resp);
 
-  private slots:
+private slots:
     void on_close_btn_clicked();
 
     void on_conn_btn_clicked();
 
     void on_set_btn_clicked();
 
-  private:
+///
+/// deprecated
+//    void onFindTimeout();
+
+private:
     Ui::CommSetupDialog *ui;
 
     CommonHelper *C_helper;
 
     SerialCommSingleton *C_serial;
 
+///
+/// deprecated
+//    QTimer * QT_findTimeoutTimer;
+
     void closeEvent(QCloseEvent *event);
 
-  signals:
+signals:
     void configSetted();
 };
 

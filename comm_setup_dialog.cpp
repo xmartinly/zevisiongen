@@ -11,6 +11,8 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     C_serial = SerialCommSingleton::GetInstance();
     C_helper = new CommonHelper;
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );
+//    QT_findTimeoutTimer = new QTimer;
+//    connect(QT_findTimeoutTimer, &QTimer::timeout, this, &CommSetupDialog::onFindTimeout);
     //Read communication config from .ini file.
     QMap<QString, QString> qm_commConfig = C_helper->readSection("./", S_fileName, S_section);
     if(qm_commConfig.count() == 3) {
@@ -41,6 +43,7 @@ void CommSetupDialog::on_set_btn_clicked() {
     );
 }
 
+
 ///
 /// \brief CommSetupDialog::on_close_btn_clicked
 ///
@@ -56,6 +59,7 @@ void CommSetupDialog::on_conn_btn_clicked() {
     if(C_serial->getConnectState()) {
         C_serial->disconnInst();
     }
+    ui->resp_lb->setText(tr("Connecting..."));
     QString s_protocolConfig = QString("QG1304;QG1305;H1");
     QString s_port = ui->port_cb->currentText(),
             s_baudrate = ui->baudrate_cb->currentText();
@@ -89,6 +93,9 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
     if(b_isMsgFailed) {
         return;
     } else { //set current protocol
+//        if(QT_findTimeoutTimer->isActive()) {
+//            QT_findTimeoutTimer->stop();
+//        }
         setProtocol(sl_cmd.at(1).toInt());
     }
     QMap _resp = qvm_response["resp"].toMap();
@@ -101,6 +108,14 @@ void CommSetupDialog::onRecvResponse(QVariantMap qm_resp) {
         findInst("H2");
     }
 }
+
+///
+/// \brief CommSetupDialog::onFindTimeout. If instrument no feedback in 2 seconds show a error message.
+///
+/// deprecated
+//void CommSetupDialog::onFindTimeout() {
+//    ui->resp_lb->setText(tr("Can not connect to instrument."));
+//}
 
 ///
 /// \brief CommSetupDialog::setCommConfig

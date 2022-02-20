@@ -83,7 +83,11 @@ void ZevisionGen::on_actionDataLogSetting_triggered() {
     if(QT_acquireTimer->isActive()) {
         on_send_btn_clicked();
     }
+    if(QT_statTimer->isActive()) {
+        QT_statTimer->stop();
+    }
     D_dataLog = new DataLogDialog;
+    connect(D_dataLog, &DataLogDialog::configSetted, this, &ZevisionGen::onReadConfig);
     D_dataLog->exec();
 }
 
@@ -100,6 +104,9 @@ void ZevisionGen::on_actionExit_triggered() {
 void ZevisionGen::on_actionCommSettings_triggered() {
     if(QT_acquireTimer->isActive()) {
         on_send_btn_clicked();
+    }
+    if(QT_statTimer->isActive()) {
+        QT_statTimer->stop();
     }
     D_commSet = new CommSetupDialog;
     connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadConfig);

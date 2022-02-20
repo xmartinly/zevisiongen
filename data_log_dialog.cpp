@@ -46,6 +46,7 @@ void DataLogDialog::readDataConfig() {
 ///
 void DataLogDialog::on_ok_btn_clicked() {
     setDataConfig();
+    emit configSetted();
     this->close();
 }
 
