@@ -196,6 +196,7 @@ void ZevisionGen::onReadConfig() {
 /// Send command to serialport. Connected to QT_acquireTimer.
 ///
 void ZevisionGen::onSendCommand() {
+    setWidgeBackgroundColor(false);
     bool b_isConnected = C_serial->getConnectState();
     QMap<QString, QByteArray> qm_cmd = C_helper->zevisonCommandGenAlpha(&S_command, I_zevisionProtocol);
     QByteArray ba_cmd = qm_cmd["cmd_treated"];
@@ -214,7 +215,6 @@ void ZevisionGen::onSendCommand() {
     } else if(!QT_statTimer->isActive()) {
         QT_statTimer->start(1000);
     }
-    setWidgeBackgroundColor(false);
 }
 
 ///
@@ -223,6 +223,7 @@ void ZevisionGen::onSendCommand() {
 /// \param qm_data. QVariantMap
 ///
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
+    setWidgeBackgroundColor(true);
     QByteArray ba_resp = qm_data["data"].toByteArray();
     QStringList sl_msg = C_helper->zevisionMsgtoList(ba_resp, I_zevisionProtocol);
     QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
@@ -232,7 +233,6 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
-    setWidgeBackgroundColor(true);
 }
 
 
