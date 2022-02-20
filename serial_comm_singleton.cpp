@@ -1,7 +1,16 @@
 ﻿#include "serial_comm_singleton.h"
 
 SerialCommSingleton::SerialCommSingleton() {
-    Comm_serialPort = new QSerialPort;
+    Comm_serialPort = new QSerialPort(this);
+    if(Comm_serialPort->isOpen()) {
+        Comm_serialPort->clear();
+        Comm_serialPort->close();
+    }
+    QT_recvDelayTimer = new QTimer(this);
+    QT_cmdQueueTimer = new QTimer(this);
+    connect(Comm_serialPort, &QSerialPort::readyRead, this, &SerialCommSingleton::portRecvDataDelay);
+    connect(QT_recvDelayTimer, &QTimer::timeout, this, &SerialCommSingleton::recvCommData);
+    connect(QT_cmdQueueTimer, &QTimer::timeout, this, &SerialCommSingleton::sendCmd);
 }
 
 ///
@@ -40,12 +49,7 @@ bool SerialCommSingleton::connInst(const QString &com_port, const QString &baud_
     Comm_serialPort->setStopBits(QSerialPort::OneStop);
     B_isConnected = Comm_serialPort->open(QIODevice::ReadWrite);
     if(B_isConnected) {
-        connect(Comm_serialPort, SIGNAL(readyRead()), this, SLOT(portRecvDataDelay()));
-        QT_recvDelayTimer = new QTimer(this);
-        connect(QT_recvDelayTimer, SIGNAL(timeout()), this, SLOT(recvCommData()));
-        QT_cmdQueueTimer = new QTimer(this);
-        connect(QT_cmdQueueTimer, SIGNAL(timeout()), this, SLOT(sendCmd()));
-        QT_cmdQueueTimer->start(90);
+        QT_cmdQueueTimer->start(30);
     }
     return B_isConnected;
 }
@@ -67,6 +71,7 @@ void SerialCommSingleton::sendCmd() {
         S_cmdString = qm_cmd["cmd_str"];
         B_isReadFinished = false;
         Comm_serialPort->write(qm_cmd["cmd_treated"]);
+        Comm_serialPort->flush();
     }
 }
 
@@ -76,7 +81,7 @@ void SerialCommSingleton::sendCmd() {
 ///
 void SerialCommSingleton::portRecvDataDelay() {
     QT_recvDelayTimer->stop();
-    QT_recvDelayTimer->start(10);
+    QT_recvDelayTimer->start(20);
 }
 
 ///
@@ -118,10 +123,20 @@ void SerialCommSingleton::recvCommData() {
 /// \return bool. serialport isOpen.
 ///
 bool SerialCommSingleton::disconnInst() {
+    if(QT_cmdQueueTimer->isActive()) {
+        QT_cmdQueueTimer->stop();
+    }
+    if(!QQ_cmd.isEmpty()) {
+        QQ_cmd.clear();
+    }
     B_isConnected = false;
+    B_isReadFinished = true;
     if(!Comm_serialPort->isOpen()) {
         return true;
     }
+    Comm_serialPort->flush();
+    Comm_serialPort->readAll();
+    Comm_serialPort->clear();
     Comm_serialPort->close();
     return !Comm_serialPort->isOpen();
 }

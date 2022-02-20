@@ -151,6 +151,7 @@ void ZevisionGen::onInstConnectState() {
     bool b_connectStateSuccess = C_serial->getConnectState();
     if(b_connectStateSuccess &&  QT_statTimer->isActive()) {
         QT_statTimer->stop();
+        return;
     }
     if(!b_connectStateSuccess) {
         b_connectStateSuccess = C_serial->connInst(S_port, S_baudrate);
@@ -205,7 +206,7 @@ void ZevisionGen::onSendCommand() {
     bool b_isConnected = C_serial->getConnectState();
     QMap<QString, QByteArray> qm_cmd = C_helper->zevisonCommandGenAlpha(&S_command, I_zevisionProtocol);
     QByteArray ba_cmd = qm_cmd["cmd_treated"];
-    QStringList sl_msg = C_helper->zevisionMsgtoList(ba_cmd, I_zevisionProtocol);
+    QStringList sl_msg = C_helper->zevisionMsgtoList(&ba_cmd, I_zevisionProtocol);
     setTblData(sl_msg, ui->msg_tb);
     QSL_dataToSave.clear();
     QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
@@ -227,7 +228,7 @@ void ZevisionGen::onSendCommand() {
 ///
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
     QByteArray ba_resp = qm_data["data"].toByteArray();
-    QStringList sl_msg = C_helper->zevisionMsgtoList(ba_resp, I_zevisionProtocol);
+    QStringList sl_msg = C_helper->zevisionMsgtoList(&ba_resp, I_zevisionProtocol);
     QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
     QSL_dataToSave.append(C_helper->bytearrayToString(ba_resp));
     QSL_dataToSave.append(C_helper->formatHexStr(ba_resp) + "\n");

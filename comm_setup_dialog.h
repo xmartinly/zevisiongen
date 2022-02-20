@@ -22,8 +22,6 @@ public:
 
     QString S_section = "Communication";
 
-    bool B_isConnectInstSuccess = false;
-
     void setCommConfig();
 
     void readProtocol();
@@ -45,7 +43,7 @@ private slots:
 
 ///
 /// deprecated
-//    void onFindTimeout();
+    void onFindTimeout();
 
 private:
     Ui::CommSetupDialog *ui;
@@ -56,7 +54,7 @@ private:
 
 ///
 /// deprecated
-//    QTimer * QT_findTimeoutTimer;
+    QTimer * QT_findTimeoutTimer;
 
     void closeEvent(QCloseEvent *event);
 

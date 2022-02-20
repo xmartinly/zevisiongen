@@ -124,7 +124,7 @@ class CommonHelper : public QObject {
 
     QList<int> zevisionProtocolCal(const int protocol);
 
-    QStringList zevisionMsgtoList(const QByteArray msg, const int protocol);
+    QStringList zevisionMsgtoList(const QByteArray *msg, const int protocol);
 
 
     QMap<QString, QStringList> readData(const QString *fileName);

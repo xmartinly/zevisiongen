@@ -70,7 +70,7 @@ QList<int> CommonHelper::zevisionProtocolCal(const int protocol) {
 /// \param protocol. const int
 /// \return qsl_msg. QStringList
 ///
-QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int protocol) {
+QStringList CommonHelper::zevisionMsgtoList(const QByteArray* msg, const int protocol) {
 // 0   "Time",
 // 1   "Start Char",
 // 2   "Msg Length",
@@ -84,36 +84,36 @@ QStringList CommonHelper::zevisionMsgtoList(const QByteArray msg, const int prot
     QStringList qsl_msg;
     qsl_msg << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a" << "n/a";
     QString s_protocol;
-    int i_msgLength = msg.length(),
+    int i_msgLength = msg->length(),
         i_skipLength = 2,
         i_msgOffsetPos = 1,
-        i_negCharPos = msg.indexOf('-');
+        i_negCharPos = msg->indexOf('-');
     if(i_negCharPos != -1) { //Found error char '-'
-        char c_error = msg.at(i_negCharPos + 1);
+        char c_error = msg->at(i_negCharPos + 1);
         qsl_msg.append(zevisionErrorMsg(c_error));
         return qsl_msg;
     }
     qsl_msg[0] = QDateTime::currentDateTime().toString("hh:mm:ss.z");
-    qsl_msg[1] = msg.at(0); //start char
-    qsl_msg[5] = msg.at(i_msgLength - 1); //stop char
-    qsl_msg[7] = formatHexStr(msg); //hex string
-    qsl_msg[8] = bytearrayToString(msg); //message string
+    qsl_msg[1] = msg->at(0); //start char
+    qsl_msg[5] = msg->at(i_msgLength - 1); //stop char
+    qsl_msg[7] = formatHexStr(*msg); //hex string
+    qsl_msg[8] = bytearrayToString(*msg); //message string
     if(protocol == ZevisionChecksum || protocol == ZevisionOptional) { //add checksum string
         i_skipLength += 1;
-        int i_chksum = msg.at(i_msgLength - 2) & 0xff;
+        int i_chksum = msg->at(i_msgLength - 2) & 0xff;
         qsl_msg[4] = "hex: " + QString::number(i_chksum, 16).toUpper() + " | int: " + QString::number(i_chksum);
         s_protocol += "@WithChecksum";
     }
     if(protocol == ZevisionLength || protocol == ZevisionOptional) { //add length string
         i_skipLength += 2;
         i_msgOffsetPos += 2;
-        QByteArray ba_length = msg.mid(1, 2);
+        QByteArray ba_length = msg->mid(1, 2);
         int i_length = lengthBytesCal(ba_length);
         qsl_msg[2] = "hex: " + ba_length.toHex().toUpper() + " | int: " + QString::number(i_length);
         s_protocol += "@WithLength";
     }
     qsl_msg[6] = s_protocol; //add protocol string
-    qsl_msg[3] = msg.mid(i_msgOffsetPos, i_msgLength - i_skipLength); //slice message data
+    qsl_msg[3] = msg->mid(i_msgOffsetPos, i_msgLength - i_skipLength); //slice message data
     return qsl_msg;
 }
 
@@ -403,7 +403,7 @@ int CommonHelper::lengthBytesCal(const QByteArray length) {
     if(length.length() != 2) {
         return -1;
     }
-    return (int)length.at(0) * 256 + (int)length.at(1);
+    return (int)(length.at(0) & 0xff) * 255 + (int)(length.at(1) & 0xff);
 }
 
 ///
