@@ -156,7 +156,6 @@ void ZevisionGen::onInstConnectState() {
     if(!b_connectStateSuccess) {
         b_connectStateSuccess = C_serial->connInst(S_port, S_baudrate);
     }
-    L_statStr->setText((b_connectStateSuccess ? "Port open." : "Port close."));
     if(I_connectInstTryCount > 10 && QT_statTimer->isActive()) {
         C_helper->normalErr(1,
                             tr("Communication Error"),
@@ -164,6 +163,7 @@ void ZevisionGen::onInstConnectState() {
                            );
         QT_statTimer->stop();
     }
+    L_statStr->setText((b_connectStateSuccess ? "Port open." : "Port close."));
     I_connectInstTryCount++;
 }
 
@@ -172,7 +172,7 @@ void ZevisionGen::onInstConnectState() {
 /// Read config file at communication and DataLog section.
 ///
 void ZevisionGen::onReadConfig() {
-    C_serial->disconnInst();
+//    C_serial->disconnInst();
     if(QT_statTimer->isActive()) {
         QT_statTimer->stop();
     }

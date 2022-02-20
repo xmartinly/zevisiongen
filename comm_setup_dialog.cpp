@@ -9,8 +9,11 @@ CommSetupDialog::CommSetupDialog(QWidget *parent) :
     setAttribute (Qt::WA_DeleteOnClose);
     ///
     C_serial = SerialCommSingleton::GetInstance();
-    C_helper = new CommonHelper;
+    C_helper = new CommonHelper(this);
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &CommSetupDialog::onRecvResponse );
+    if(C_serial->getConnectState()) {
+        C_serial->disconnInst();
+    }
     QT_findTimeoutTimer = new QTimer(this);
     connect(QT_findTimeoutTimer, &QTimer::timeout, this, &CommSetupDialog::onFindTimeout);
     //Read communication config from .ini file.
@@ -64,6 +67,9 @@ void CommSetupDialog::on_conn_btn_clicked() {
     if(C_serial->connInst(s_port, s_baudrate)) {
         findInst(s_protocolConfig);
     }
+    if(QT_findTimeoutTimer->isActive()) {
+        return;
+    }
     QT_findTimeoutTimer->start(2000);
 }
 
@@ -72,6 +78,8 @@ void CommSetupDialog::on_conn_btn_clicked() {
 /// \param event
 ///
 void CommSetupDialog::closeEvent(QCloseEvent *event) {
+//    killTimer(I_findTimeoutTimerId);
+    QT_findTimeoutTimer->deleteLater();
     setCommConfig();
     emit configSetted();
     event->accept();

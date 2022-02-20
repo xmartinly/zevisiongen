@@ -18,6 +18,8 @@ public:
 
     int I_zevisionProtocol = -1;
 
+    int I_findTimeoutTimerId;
+
     QString S_fileName = "zevision.ini";
 
     QString S_section = "Communication";
