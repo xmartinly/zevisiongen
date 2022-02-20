@@ -49,6 +49,13 @@ void ZevisionGen::on_actionToggle_CHS_ENG_triggered() {
     refreshTblWidget(B_isUsingTrans);
 }
 
+///
+/// \brief ZevisionGen::on_cmd_le_returnPressed
+///
+void ZevisionGen::on_cmd_le_returnPressed() {
+    S_command = ui->cmd_le->text();
+    onSendCommand();
+}
 
 ///
 /// \brief ZevisionGen::on_send_btn_clicked. SYSTEM private SLOT.
@@ -212,8 +219,6 @@ void ZevisionGen::onSendCommand() {
         C_serial->cmdEnQueue(
             qm_cmd
         );
-    } else if(!QT_statTimer->isActive()) {
-        QT_statTimer->start(1000);
     }
 }
 
@@ -357,6 +362,7 @@ void ZevisionGen::setWidgeBackgroundColor(const bool b_isResponse) {
     QLB_leftStatus->setPixmap(b_isResponse ? QP_finalStatePic : QP_activePic);
     statusBar()->update();
 }
+
 
 
 

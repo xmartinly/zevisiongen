@@ -149,6 +149,12 @@ public slots:
     ///
     void onSendCommand();
 
+    ///
+    /// \brief sendCommand
+    /// \param cmd
+    ///
+//    void sendCommand(const QString cmd);
+
 
 private slots:
     void on_actionDataLogSetting_triggered();
@@ -164,6 +170,10 @@ private slots:
     void on_send_btn_clicked();
 
     void on_actionToggle_CHS_ENG_triggered();
+
+
+
+    void on_cmd_le_returnPressed();
 
 private:
     Ui::ZevisionGen *ui;
