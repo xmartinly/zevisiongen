@@ -8,10 +8,15 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     S_fileName = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     C_serial = SerialCommSingleton::GetInstance();
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &ZevisionGen::onRecvResponse);
-    L_statStr = new QLabel("Inst Offline." + S_version);
+    L_statStr = new QLabel("Inst Offline.");
     L_statStr->setAlignment(Qt::AlignRight);
+    L_verStr = new QLabel(S_version);
+    L_verStr->setAlignment(Qt::AlignRight);
+    L_statStr->setIndent(1);
     statusBar()->setSizeGripEnabled(false);
-    statusBar()->addPermanentWidget(L_statStr, 1);
+    statusBar()->addPermanentWidget(L_verStr);
+    statusBar()->addWidget(L_statStr, 1);
+//    statusBar()->
     QT_statTimer = new QTimer( this );
     QT_acquireTimer = new QTimer( this );
     connect( QT_statTimer, SIGNAL(timeout()), this, SLOT(onInstConnectState()));
@@ -123,7 +128,7 @@ void ZevisionGen::on_actionDocument_triggered() {
 ///
 void ZevisionGen::onInstConnectState() {
     B_isInstConnected = C_serial->getConnectState();
-    L_statStr->setText((B_isInstConnected ? "Port open." : "Port close.") + S_version);
+    L_statStr->setText((B_isInstConnected ? "Port open." : "Port close."));
     if(!B_isInstConnected) {
         C_serial->connInst(S_port, S_baudrate);
     } else {

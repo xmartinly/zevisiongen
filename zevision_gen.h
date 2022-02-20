@@ -200,6 +200,12 @@ class ZevisionGen : public QMainWindow {
     ///
     QLabel *L_statStr = nullptr;
 
+
+    ///
+    /// \brief L_verStr
+    ///
+    QLabel *L_verStr = nullptr;
+
     ///
     /// \brief m_translator
     ///
