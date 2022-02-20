@@ -6,16 +6,16 @@
 class SerialCommSingleton:  public QObject {
     Q_OBJECT
 
-  public:
+public:
     static SerialCommSingleton *GetInstance();
 
     bool connInst(const QString &com_port, const QString &baud_rate);
 
-    bool getConnectState() const {
+    bool getConnectState() {
         return B_isConnected;
     }
 
-    bool getReadFinished() const {
+    bool getReadFinished() {
         return B_isReadFinished;
     }
 
@@ -26,7 +26,7 @@ class SerialCommSingleton:  public QObject {
     void cmdEnQueue(const QMap<QString, QByteArray> qm_cmd);
 
 
-  private:
+private:
     SerialCommSingleton();
 
     static SerialCommSingleton *m_instance;
@@ -41,14 +41,14 @@ class SerialCommSingleton:  public QObject {
 
     QTimer *QT_recvDelayTimer, *QT_cmdQueueTimer;
 
-  private slots:
+private slots:
     void recvCommData();
 
     void portRecvDataDelay();
 
     void sendCmd();
 
-  signals:
+signals:
     void sendResponse(QMap<QString, QVariant>);
 };
 

@@ -1,4 +1,4 @@
-#ifndef STABLE_H
+﻿#ifndef STABLE_H
 #define STABLE_H
 
 #include <QtCore/qglobal.h>
@@ -27,6 +27,8 @@
 
 #include <QApplication>
 #include <Windows.h>
+
+#include <QDebug>
 
 
 #endif // STABLE_H

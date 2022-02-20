@@ -243,114 +243,124 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="35"/>
+        <location filename="zevision_gen.ui" line="34"/>
         <source>Command</source>
         <translation>命令</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="54"/>
+        <location filename="zevision_gen.ui" line="53"/>
         <source>H1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="86"/>
-        <location filename="zevision_gen.cpp" line="58"/>
-        <location filename="zevision_gen.cpp" line="283"/>
+        <location filename="zevision_gen.ui" line="85"/>
+        <location filename="zevision_gen.cpp" line="75"/>
+        <location filename="zevision_gen.cpp" line="309"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="127"/>
+        <location filename="zevision_gen.ui" line="125"/>
         <source>Message</source>
         <translation>发送信息</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="156"/>
+        <location filename="zevision_gen.ui" line="153"/>
         <source>Response</source>
         <translation>反馈</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="183"/>
+        <location filename="zevision_gen.ui" line="180"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="190"/>
+        <location filename="zevision_gen.ui" line="187"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="198"/>
+        <location filename="zevision_gen.ui" line="195"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="210"/>
+        <location filename="zevision_gen.ui" line="207"/>
         <source>DataLogSetting</source>
         <translation>数据记录设置</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="215"/>
+        <location filename="zevision_gen.ui" line="212"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="220"/>
+        <location filename="zevision_gen.ui" line="217"/>
         <source>CommSettings</source>
         <translation>通讯配置</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="225"/>
+        <location filename="zevision_gen.ui" line="222"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="230"/>
+        <location filename="zevision_gen.ui" line="227"/>
         <source>Document</source>
         <translation>文档</translation>
     </message>
     <message>
-        <location filename="zevision_gen.ui" line="235"/>
+        <location filename="zevision_gen.ui" line="232"/>
         <source>Toggle CHS/ENG</source>
         <translation>切换 中文/英文</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="53"/>
+        <location filename="zevision_gen.cpp" line="210"/>
         <source>Command error</source>
         <translation>命令错误</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="54"/>
+        <location filename="zevision_gen.cpp" line="211"/>
         <source>Command can not be empty.</source>
         <translation>命令不能为空.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="58"/>
+        <location filename="zevision_gen.cpp" line="75"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="140"/>
+        <location filename="zevision_gen.cpp" line="47"/>
+        <source>Translate</source>
+        <translation>切换翻译</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="48"/>
+        <source>Please press stop first.</source>
+        <translation>请先点击停止按钮.</translation>
+    </message>
+    <message>
+        <location filename="zevision_gen.cpp" line="158"/>
         <source>Comm Config Error</source>
         <translation>配置文件错误</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="141"/>
+        <location filename="zevision_gen.cpp" line="159"/>
         <source>No communication config found.</source>
         <translation>未找到通讯配置文件.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="150"/>
+        <location filename="zevision_gen.cpp" line="168"/>
         <source>Communication Error</source>
         <translation>通讯异常</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="151"/>
+        <location filename="zevision_gen.cpp" line="169"/>
         <source>Can&apos;t open port.</source>
         <translation>无法打开端口.请检查端口设置.</translation>
     </message>
     <message>
-        <location filename="zevision_gen.cpp" line="290"/>
+        <location filename="zevision_gen.cpp" line="316"/>
         <source>Message error</source>
         <translation>数据错误</translation>
     </message>

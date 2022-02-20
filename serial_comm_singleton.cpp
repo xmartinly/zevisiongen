@@ -118,6 +118,7 @@ void SerialCommSingleton::recvCommData() {
 /// \return bool. serialport isOpen.
 ///
 bool SerialCommSingleton::disconnInst() {
+    B_isConnected = false;
     if(!Comm_serialPort->isOpen()) {
         return true;
     }

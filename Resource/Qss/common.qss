@@ -203,6 +203,7 @@ border-right: none;
 QPushButton
 {
 background-color: #2E598A;
+/*background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,stop:0 #2A008A, stop:1 #2E598A);*/
 color: #F1F1F1;
 border: none;
 border-radius: 5px;

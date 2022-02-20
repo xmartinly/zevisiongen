@@ -8,11 +8,11 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     S_fileName = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     C_serial = SerialCommSingleton::GetInstance();
     connect(C_serial, &SerialCommSingleton::sendResponse, this, &ZevisionGen::onRecvResponse);
-    L_statStr = new QLabel("Inst Offline.");
+    L_statStr = new QLabel();
     L_statStr->setAlignment(Qt::AlignRight);
     L_verStr = new QLabel(S_version);
     L_verStr->setAlignment(Qt::AlignRight);
-    L_statStr->setIndent(1);
+//    L_statStr->setIndent(1);
     QLB_leftStatus = new QLabel(this);
     QLB_leftStatus->setPixmap(QP_inactivePic);
 //    QLB_leftStatus->setGeometry(0, 50, 16, 16);
@@ -29,7 +29,7 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     onReadConfig();
     initializeTbl();
     m_translator = new QTranslator(qApp);
-    m_translator->load(":/i18n/ZevisionGen_en_US.qm");
+//    m_translator->load(":/i18n/ZevisionGen_en_US.qm");
     qApp->installTranslator(m_translator);
 }
 
@@ -41,6 +41,9 @@ ZevisionGen::~ZevisionGen() {
 /// \brief ZevisionGen::on_actionToggle_CHS_ENG_triggered
 ///
 void ZevisionGen::on_actionToggle_CHS_ENG_triggered() {
+    if(QT_acquireTimer->isActive()) {
+        on_send_btn_clicked();
+    }
     B_isUsingTrans = !B_isUsingTrans;
     QString s_transFileName;
     s_transFileName = B_isUsingTrans ? "ZevisionGen_zh_CN.qm" :  "ZevisionGen_en_US.qm";
@@ -61,17 +64,8 @@ void ZevisionGen::on_cmd_le_returnPressed() {
 /// \brief ZevisionGen::on_send_btn_clicked. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_send_btn_clicked() {
-    onReadConfig();
-    S_command = ui->cmd_le->text().toUpper();
-    bool B_isCmdEmpty = S_command.length() == 0;
+    S_command = ui->cmd_le->text();
     bool b_isAcquireTimerActive = QT_acquireTimer->isActive();
-    if(B_isCmdEmpty) {
-        C_helper->normalErr(1,
-                            tr("Command error"),
-                            tr("Command can not be empty.")
-                           );
-        return;
-    }
     ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
     ui->cmd_le->setEnabled(b_isAcquireTimerActive);
     if(b_isAcquireTimerActive) {
@@ -86,6 +80,9 @@ void ZevisionGen::on_send_btn_clicked() {
 /// \brief ZevisionGen::on_actionDataLogSetting_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionDataLogSetting_triggered() {
+    if(QT_acquireTimer->isActive()) {
+        on_send_btn_clicked();
+    }
     D_dataLog = new DataLogDialog;
     D_dataLog->exec();
 }
@@ -94,12 +91,16 @@ void ZevisionGen::on_actionDataLogSetting_triggered() {
 /// \brief ZevisionGen::on_actionExit_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionExit_triggered() {
+    this->close();
 }
 
 ///
 /// \brief ZevisionGen::on_actionCommSettings_triggered. SYSTEM private SLOT.
 ///
 void ZevisionGen::on_actionCommSettings_triggered() {
+    if(QT_acquireTimer->isActive()) {
+        on_send_btn_clicked();
+    }
     D_commSet = new CommSetupDialog;
     connect(D_commSet, &CommSetupDialog::configSetted, this, &ZevisionGen::onReadConfig);
     D_commSet->exec();
@@ -140,38 +141,20 @@ void ZevisionGen::on_actionDocument_triggered() {
 /// Connect instrument. QT_statTimer connected.
 ///
 void ZevisionGen::onInstConnectState() {
-    B_isInstConnected = C_serial->getConnectState();
-    L_statStr->setText((B_isInstConnected ? "Port open." : "Port close."));
-    if(!B_isInstConnected) {
-        C_serial->connInst(S_port, S_baudrate);
-    } else {
-        QString s_hello  = "H1";
-        C_serial->cmdEnQueue(
-            C_helper->zevisonCommandGenAlpha(&s_hello, I_zevisionProtocol)
-        );
-        if(QT_statTimer->isActive()) {
-            QT_statTimer->stop();
-        }
+    bool b_connectStateSuccess = C_serial->getConnectState();
+    if(b_connectStateSuccess &&  QT_statTimer->isActive()) {
+        QT_statTimer->stop();
     }
-    if(QM_commConfig.count() != 3) {
-        C_helper->normalErr(1,
-                            tr("Comm Config Error"),
-                            tr("No communication config found.")
-                           );
-        if(QT_statTimer->isActive()) {
-            QT_statTimer->stop();
-        }
-        return;
+    if(!b_connectStateSuccess) {
+        b_connectStateSuccess = C_serial->connInst(S_port, S_baudrate);
     }
-    if(I_connectInstTryCount > 10) {
+    L_statStr->setText((b_connectStateSuccess ? "Port open." : "Port close."));
+    if(I_connectInstTryCount > 10 && QT_statTimer->isActive()) {
         C_helper->normalErr(1,
                             tr("Communication Error"),
                             tr("Can't open port.")
                            );
-        if(QT_statTimer->isActive()) {
-            QT_statTimer->stop();
-        }
-        return;
+        QT_statTimer->stop();
     }
     I_connectInstTryCount++;
 }
@@ -181,21 +164,21 @@ void ZevisionGen::onInstConnectState() {
 /// Read config file at communication and DataLog section.
 ///
 void ZevisionGen::onReadConfig() {
-    QM_commConfig = C_helper->readSection("./", "zevision.ini", "Communication");
-    S_port = QM_commConfig["Port"];
-    S_baudrate = QM_commConfig["Baudrate"];
-    I_zevisionProtocol = QM_commConfig["Protocol"].toInt();
+    C_serial->disconnInst();
+    if(QT_statTimer->isActive()) {
+        QT_statTimer->stop();
+    }
+    QMap<QString, QString> qm_commSetup = C_helper->readSection("./", "zevision.ini", "Communication");
+    I_connectInstTryCount = 0;
+    S_port = qm_commSetup["Port"];
+    S_baudrate = qm_commSetup["Baudrate"];
+    I_zevisionProtocol = qm_commSetup["Protocol"].toInt();
     QMap<QString, QString> qm_dataSetup = C_helper->readSection("./", "zevision.ini", "DataLog");
     B_isSaveData = qm_dataSetup["SaveData"].toInt();
     S_filePath = qm_dataSetup["Path"] + "/" + S_fileName + ".csv";
     I_fileOperate = qm_dataSetup["Operate"].toInt();
     I_collectIntvl = qm_dataSetup["Interval"].toInt();
-    if(C_serial->getConnectState()) {
-        return;
-    }
-    if(!QT_statTimer->isActive()) {
-        QT_statTimer->start(1000);
-    }
+    QT_statTimer->start(1000);
 }
 
 ///
@@ -203,7 +186,15 @@ void ZevisionGen::onReadConfig() {
 /// Send command to serialport. Connected to QT_acquireTimer.
 ///
 void ZevisionGen::onSendCommand() {
-    setWidgeBackgroundColor(false);
+    setStatusActiveIcon(false);
+    bool B_isCmdEmpty = S_command.length() == 0;
+    if(B_isCmdEmpty) {
+        C_helper->normalErr(1,
+                            tr("Command error"),
+                            tr("Command can not be empty.")
+                           );
+        return;
+    }
     bool b_isConnected = C_serial->getConnectState();
     QMap<QString, QByteArray> qm_cmd = C_helper->zevisonCommandGenAlpha(&S_command, I_zevisionProtocol);
     QByteArray ba_cmd = qm_cmd["cmd_treated"];
@@ -237,7 +228,7 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
-    setWidgeBackgroundColor(true);
+    setStatusActiveIcon(true);
 }
 
 
@@ -286,6 +277,10 @@ void ZevisionGen::initializeTbl() {
         ui->msg_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
         ui->resp_tb->setItem(i, 1, new QTableWidgetItem("n/a"));
     }
+    ui->msg_tb->horizontalHeader()->setStyleSheet(S_tableHeaderStyle);
+    ui->msg_tb->horizontalHeader()->setHighlightSections(false);
+    ui->resp_tb->horizontalHeader()->setStyleSheet(S_tableHeaderStyle);
+    ui->resp_tb->horizontalHeader()->setHighlightSections(false);
 }
 
 ///
@@ -355,7 +350,7 @@ void ZevisionGen::refreshTblWidget(bool b_useCHS) {
 /// \brief ZevisionGen::setWidgeBackgroundColor
 /// \param b_isResponse
 ///
-void ZevisionGen::setWidgeBackgroundColor(const bool b_isResponse) {
+void ZevisionGen::setStatusActiveIcon(const bool b_isResponse) {
     if(!QT_acquireTimer->isActive()) {
         return;
     }

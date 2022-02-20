@@ -29,7 +29,10 @@ public:
     ///
     /// \brief S_version. Version string shown at status bar.
     ///
-    QString S_version = " | Zevision Command Gen. beta 0.0.1";
+    QString S_version = "Zevision Command Gen. beta v0.0.1";
+
+//    QString S_tableHeaderStyle = "QHeaderView::section {background-color: #00007f; color: white;}";
+    QString S_tableHeaderStyle = "QHeaderView::section {background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 #20408A, stop:1 #2E598A);color: white;}";
 
     ///
     /// \brief S_port. Default com port string.
@@ -125,7 +128,7 @@ public:
     ///
     void refreshTblWidget(bool b_useCHS);
 
-    void setWidgeBackgroundColor(const bool b_isResponse = false);
+    void setStatusActiveIcon(const bool b_isResponse = false);
 
 public slots:
 
@@ -170,8 +173,6 @@ private slots:
     void on_send_btn_clicked();
 
     void on_actionToggle_CHS_ENG_triggered();
-
-
 
     void on_cmd_le_returnPressed();
 
