@@ -13,9 +13,14 @@ ZevisionGen::ZevisionGen(QWidget *parent)
     L_verStr = new QLabel(S_version);
     L_verStr->setAlignment(Qt::AlignRight);
     L_statStr->setIndent(1);
+    QLB_leftStatus = new QLabel(this);
+    QLB_leftStatus->setPixmap(QP_inactivePic);
+//    QLB_leftStatus->setGeometry(0, 50, 16, 16);
+    QLB_leftStatus->setAlignment(Qt::AlignLeft);
     statusBar()->setSizeGripEnabled(false);
-    statusBar()->addPermanentWidget(L_verStr);
+    statusBar()->addWidget(QLB_leftStatus, 2);
     statusBar()->addWidget(L_statStr, 1);
+    statusBar()->addPermanentWidget(L_verStr);
 //    statusBar()->
     QT_statTimer = new QTimer( this );
     QT_acquireTimer = new QTimer( this );
@@ -63,6 +68,7 @@ void ZevisionGen::on_send_btn_clicked() {
     ui->send_btn->setText(b_isAcquireTimerActive ? tr("Start") : tr("Stop"));
     ui->cmd_le->setEnabled(b_isAcquireTimerActive);
     if(b_isAcquireTimerActive) {
+        QLB_leftStatus->setPixmap(QP_inactivePic);
         QT_acquireTimer->stop();
         return;
     }
@@ -208,7 +214,7 @@ void ZevisionGen::onSendCommand() {
     } else if(!QT_statTimer->isActive()) {
         QT_statTimer->start(1000);
     }
-//    setWidgeBackgroundColor(false);
+    setWidgeBackgroundColor(false);
 }
 
 ///
@@ -226,7 +232,7 @@ void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
-//    setWidgeBackgroundColor(true);
+    setWidgeBackgroundColor(true);
 }
 
 
@@ -345,12 +351,11 @@ void ZevisionGen::refreshTblWidget(bool b_useCHS) {
 /// \param b_isResponse
 ///
 void ZevisionGen::setWidgeBackgroundColor(const bool b_isResponse) {
-    QString s_activeStyleSheet = "color: #FF0000; font: 12pt",
-            s_inActiveStyleSheet = "color: #000000; font: 9pt";
-    ui->msg_lb->setStyleSheet(b_isResponse ? s_inActiveStyleSheet : s_activeStyleSheet);
-    ui->resp_lb->setStyleSheet(b_isResponse ? s_activeStyleSheet : s_inActiveStyleSheet);
-//    ui->msg_widget->setStyleSheet(b_isResponse ? s_inActiveStyleSheet : s_activeStyleSheet);
-//    ui->resp_widget->setStyleSheet(b_isResponse ? s_activeStyleSheet : s_inActiveStyleSheet);
+    if(!QT_acquireTimer->isActive()) {
+        return;
+    }
+    QLB_leftStatus->setPixmap(b_isResponse ? QP_finalStatePic : QP_activePic);
+    statusBar()->update();
 }
 
 

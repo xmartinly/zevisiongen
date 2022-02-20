@@ -21,7 +21,7 @@ QT_END_NAMESPACE
 class ZevisionGen : public QMainWindow {
     Q_OBJECT
 
-  public:
+public:
     ZevisionGen(QWidget *parent = nullptr);
 
     ~ZevisionGen();
@@ -60,6 +60,11 @@ class ZevisionGen : public QMainWindow {
     /// \brief QSL_dataToSave
     ///
     QStringList QSL_dataToSave;
+
+
+    QPixmap QP_inactivePic = QPixmap(":/Resource/Picture/png/inactive_state.png"),
+            QP_activePic = QPixmap(":/Resource/Picture/png/active_state.png"),
+            QP_finalStatePic = QPixmap(":/Resource/Picture/png/final_state.png");
 
     ///
     /// \brief I_connectInstTryCount. Connection tries count. Will stop QT_statTimer when increase to 10.
@@ -122,7 +127,7 @@ class ZevisionGen : public QMainWindow {
 
     void setWidgeBackgroundColor(const bool b_isResponse = false);
 
-  public slots:
+public slots:
 
     ///
     /// \brief onRecvResponse. Receive data from serialCommSingleton Class.
@@ -145,7 +150,7 @@ class ZevisionGen : public QMainWindow {
     void onSendCommand();
 
 
-  private slots:
+private slots:
     void on_actionDataLogSetting_triggered();
 
     void on_actionExit_triggered();
@@ -160,7 +165,7 @@ class ZevisionGen : public QMainWindow {
 
     void on_actionToggle_CHS_ENG_triggered();
 
-  private:
+private:
     Ui::ZevisionGen *ui;
 
     ///
@@ -200,6 +205,10 @@ class ZevisionGen : public QMainWindow {
     ///
     QLabel *L_statStr = nullptr;
 
+    ///
+    /// \brief QLB_leftStatus
+    ///
+    QLabel *QLB_leftStatus;
 
     ///
     /// \brief L_verStr

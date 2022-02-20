@@ -102,5 +102,12 @@
         <file>Resource/Picture/svg/zoom_out.svg</file>
         <file>Resource/Picture/svg/zoom_to_extents.svg</file>
         <file>Resource/Qss/common.qss</file>
+        <file>Resource/Picture/svg/active_state.svg</file>
+        <file>Resource/Picture/svg/initial_state.svg</file>
+        <file>Resource/Picture/svg/final_state.svg</file>
+        <file>Resource/Picture/png/active_state.png</file>
+        <file>Resource/Picture/png/final_state.png</file>
+        <file>Resource/Picture/png/inactive_state.png</file>
+        <file>Resource/Picture/png/initial_state.png</file>
     </qresource>
 </RCC>
