@@ -207,7 +207,7 @@ void ZevisionGen::onSendCommand() {
     QSL_dataToSave.append(S_command);
     QSL_dataToSave.append(sl_msg[6]);
     QSL_dataToSave.append(C_helper->bytearrayToString(ba_cmd));
-    QSL_dataToSave.append(ba_cmd.toHex());
+    QSL_dataToSave.append(C_helper->formatHexStr(ba_cmd));
     if(b_isConnected) {
         C_serial->cmdEnQueue(
             qm_cmd
@@ -223,16 +223,16 @@ void ZevisionGen::onSendCommand() {
 /// \param qm_data. QVariantMap
 ///
 void ZevisionGen::onRecvResponse(QVariantMap qm_data) {
-    setWidgeBackgroundColor(true);
     QByteArray ba_resp = qm_data["data"].toByteArray();
     QStringList sl_msg = C_helper->zevisionMsgtoList(ba_resp, I_zevisionProtocol);
     QSL_dataToSave.append(QDateTime::currentDateTime().toString("hh:mm:ss.z"));
     QSL_dataToSave.append(C_helper->bytearrayToString(ba_resp));
-    QSL_dataToSave.append(ba_resp.toHex() + "\n");
+    QSL_dataToSave.append(C_helper->formatHexStr(ba_resp) + "\n");
     if(B_isSaveData && QT_acquireTimer->isActive()) {
         C_helper->saveData(QSL_dataToSave, S_filePath, 1);
     }
     setTblData(sl_msg, ui->resp_tb);
+    setWidgeBackgroundColor(true);
 }
 
 
