@@ -403,7 +403,7 @@ int CommonHelper::lengthBytesCal(const QByteArray length) {
     if(length.length() != 2) {
         return -1;
     }
-    return (int)(length.at(0) & 0xff) * 255 + (int)(length.at(1) & 0xff);
+    return (int)(length.at(0) & 0xff) * 256 + (int)(length.at(1) & 0xff);
 }
 
 ///
